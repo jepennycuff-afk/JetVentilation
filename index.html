@@ -183,7 +183,8 @@
   }
   .orient-card:hover { border-color: var(--accent); background: var(--accent-soft); }
   .orient-card[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
-  .orient-icon { font-size: 30px; margin-bottom: 6px; }
+  .orient-img { width: 100%; border-radius: 8px; margin-bottom: 10px; }
+  .orient-card[aria-pressed="false"] .orient-img { opacity: 0.75; }
   .orient-title { font-family: var(--display); font-size: 14px; font-weight: 700; margin-bottom: 4px; }
   .orient-sub { font-size: 12px; color: var(--muted); }
   .orient-note { padding: 14px; background: var(--surface2); border-radius: 10px; font-size: 14px; line-height: 1.7; border-left: 3px solid var(--accent); }
@@ -415,10 +416,6 @@
     table { display: block; overflow-x: auto; }
     .score-num { font-size: 52px; }
   }
-  @media (max-width: 400px) {
-    .orient-grid { grid-template-columns: 1fr; }
-  }
-
   /* PRINT: only the active tab, no chrome */
   @media print {
     header, .nav, .no-print, #gloss-pop { display: none !important; }
@@ -503,18 +500,15 @@
 
   <div class="card">
     <h2 class="card-title"><span class="icon icon-green">🗺️</span> Patient orientation decides the setup</h2>
-    <figure class="photo">
-      <img src="assets/room-layout.jpg" alt="Top-down CT room. Left: head to scanner, with the jet ventilator cart behind the gantry and the TcCO2 monitor at the feet. Right: feet to scanner, with the jet cart in front of the gantry opposite the IR physician and the TcCO2 monitor at the head." width="1376" height="768">
-      <figcaption><strong>Left:</strong> head to scanner. <strong>Right:</strong> feet to scanner. Tap one below for details.</figcaption>
-    </figure>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:12px;">Tap a layout for details.</p>
     <div class="orient-grid">
       <button class="orient-card" data-orient="head" aria-pressed="false">
-        <div class="orient-icon">🧠</div>
+        <img class="orient-img" src="assets/room-head-to-scanner.jpg" alt="Top-down CT room, head to scanner: the jet ventilator cart is behind the gantry and the TcCO2 monitor is at the patient's feet." width="590" height="500">
         <div class="orient-title">Head to Scanner</div>
         <div class="orient-sub">Liver / lung ablation</div>
       </button>
       <button class="orient-card" data-orient="feet" aria-pressed="false">
-        <div class="orient-icon">🦶</div>
+        <img class="orient-img" src="assets/room-feet-to-scanner.jpg" alt="Top-down CT room, feet to scanner: the jet ventilator cart is in front of the gantry opposite the IR physician, and the TcCO2 monitor is at the patient's head." width="590" height="500">
         <div class="orient-title">Feet to Scanner</div>
         <div class="orient-sub">Renal / some livers</div>
       </button>
