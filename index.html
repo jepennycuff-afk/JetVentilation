@@ -1,3 +1,4 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,16 +36,24 @@
   }
 
   /* HEADER */
+  .top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    overflow: hidden; /* prevent vertical scroll bleed */
+  }
+
   header {
     background: linear-gradient(135deg, #e8f4fd 0%, #dbeeff 100%);
     border-bottom: 2px solid #b8d9f5;
-    padding: 20px 32px;
+    padding: 14px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
   }
 
   .logo {
@@ -95,31 +104,39 @@
   /* NAV TABS */
   .nav {
     display: flex;
-    gap: 4px;
-    padding: 0 32px 0;
+    gap: 0;
+    padding: 0 8px;
     border-bottom: 2px solid var(--border);
     background: var(--surface);
     overflow-x: auto;
+    overflow-y: hidden; /* kill vertical scroll */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    height: 46px; /* fixed height prevents vertical scroll */
+    align-items: stretch;
   }
+  .nav::-webkit-scrollbar { display: none; }
 
   .nav-tab {
     font-family: 'DM Mono', monospace;
     font-size: 12px;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
-    padding: 10px 20px;
+    padding: 0 16px;
     border: none;
     background: transparent;
     color: var(--muted);
     cursor: pointer;
     border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
+    margin-bottom: -2px;
     transition: all 0.2s;
     white-space: nowrap;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
   }
 
-  .nav-tab { padding: 14px 20px; }
   .nav-tab:hover { color: var(--text); }
   .nav-tab.active {
     color: var(--accent);
@@ -130,8 +147,11 @@
   .main {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 32px 24px;
+    padding: 24px 16px;
+    padding-top: var(--top-bar-h, 120px);
     background: #ffffff;
+    overflow-x: hidden;
+    width: 100%;
   }
 
   .section { display: none; }
@@ -658,13 +678,107 @@
     gap: 20px;
   }
 
+  /* ===== MOBILE RESPONSIVE ===== */
   @media (max-width: 700px) {
+    /* Global overflow guard */
+    html, body { overflow-x: hidden; max-width: 100vw; }
+
+    /* Layout */
     .two-col { grid-template-columns: 1fr; }
-    .control-row { grid-template-columns: 1fr 1fr; }
-    .display-panel { grid-template-columns: 1fr 1fr; }
-    header { padding: 16px; }
-    .nav { padding: 12px 16px 0; }
-    .main { padding: 20px 16px; }
+    .main { padding: 14px 12px; padding-top: var(--top-bar-h, 110px); }
+
+    /* Header — compact on mobile */
+    header { padding: 10px 12px; }
+    .logo-text { font-size: 15px; }
+    .logo-sub { font-size: 9px; letter-spacing: 1px; }
+    .logo-icon { width: 34px; height: 34px; font-size: 16px; }
+    .badge { font-size: 10px; padding: 4px 8px; }
+
+    /* Section titles */
+    .section-title { font-size: 20px; }
+    .section-sub { font-size: 13px; margin-bottom: 18px; }
+
+    /* Cards */
+    .card { padding: 14px 12px; }
+    .card-title { font-size: 14px; }
+
+    /* Checklist — bigger tap targets */
+    .check-item { padding: 12px 12px; min-height: 52px; }
+    .check-box { width: 26px; height: 26px; flex-shrink: 0; }
+    .check-text { font-size: 14px; }
+
+    /* Machine controls — prevent overflow */
+    .machine-visual { padding: 14px 10px; }
+    .machine-body { padding: 12px; max-width: 100%; width: 100%; }
+    .machine-label { font-size: 16px; letter-spacing: 1px; }
+    .machine-sublabel { font-size: 9px; }
+    .control-row { grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+    .display-panel { grid-template-columns: 1fr 1fr; gap: 6px; padding: 10px; }
+    .display-value .val { font-size: 20px; }
+    .display-value .label { font-size: 9px; }
+    .knob-group { padding: 8px 6px; }
+    .knob-label { font-size: 9px; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .knob-controls { gap: 6px; }
+    /* Bigger knob buttons — 44px touch target */
+    .knob-btn { width: 40px; height: 40px; font-size: 20px; }
+    .knob-val { font-size: 18px; min-width: 36px; }
+    /* Machine action buttons */
+    .machine-btn { padding: 13px 14px; font-size: 12px; min-height: 48px; }
+    .machine-btn-row { gap: 8px; flex-wrap: wrap; justify-content: stretch; }
+    .machine-btn-row .machine-btn { flex: 1; text-align: center; min-width: 0; }
+
+    /* TcCO2 */
+    .tcco2-value { font-size: 42px; }
+    .tcco2-panel { padding: 14px 10px; }
+
+    /* Orientation cards */
+    .orient-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .orient-card { padding: 12px 8px; }
+    .orient-icon { font-size: 26px; }
+    .orient-title { font-size: 13px; }
+    .orient-sub { font-size: 11px; }
+
+    /* Scenario cards — full width on small screens */
+    .scenario-grid { grid-template-columns: 1fr; gap: 12px; }
+    .scenario-card { padding: 16px; }
+
+    /* Quiz options — bigger tap targets */
+    .quiz-option { padding: 15px 12px; font-size: 14px; min-height: 52px; }
+    .quiz-question { font-size: 14px; padding: 14px; }
+    .next-btn { padding: 14px 22px; font-size: 13px; min-height: 48px; width: 100%; }
+
+    /* Tables — horizontal scroll within card */
+    table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
+    th, td { min-width: 80px; }
+
+    /* Equipment grid */
+    .card [style*="grid-template-columns:repeat"] {
+      grid-template-columns: 1fr 1fr !important;
+    }
+
+    /* Info pill — wrap text */
+    .info-pill { font-size: 12px; padding: 10px 12px; display: flex; }
+
+    /* Back button */
+    .back-btn { padding: 12px 14px; min-height: 44px; font-size: 12px; }
+
+    /* Score display */
+    .score-num { font-size: 56px; }
+    .score-display { padding: 24px 16px; }
+
+    /* Scenario header — stack on very narrow */
+    .scenario-header { flex-wrap: wrap; gap: 10px; }
+
+    /* Figures / SVG diagrams — scale down */
+    figure { padding: 12px 8px 8px; overflow-x: auto; }
+    figure svg { max-width: 100%; }
+  }
+
+  @media (max-width: 400px) {
+    .orient-grid { grid-template-columns: 1fr; }
+    .machine-btn-row { flex-direction: column; align-items: stretch; }
+    .control-row { gap: 6px; }
+    .knob-val { font-size: 16px; min-width: 30px; }
   }
 
   /* ORIENTATION SELECTOR */
@@ -844,10 +958,34 @@
   .val-range { color: var(--muted); font-size: 12px; }
 
   hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+  /* DIAGRAMS */
+  figure {
+    margin: 0 0 20px 0;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 20px 12px;
+  }
+  figure svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+  }
+  figcaption {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--dim);
+    text-align: center;
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+  }
 </style>
 </head>
 <body>
 
+<div class="top-bar">
 <header>
   <div class="logo">
     <div class="logo-icon">🫁</div>
@@ -866,6 +1004,7 @@
   <button class="nav-tab" onclick="showSection('scenarios')">Scenarios</button>
   <button class="nav-tab" onclick="showSection('reference')">Quick Reference</button>
 </div>
+</div><!-- /.top-bar -->
 
 <!-- ===== OVERVIEW ===== -->
 <div id="overview" class="section active main">
@@ -892,7 +1031,7 @@
 
   <div class="card">
     <div class="card-title"><div class="icon icon-yellow">📋</div> Equipment Required</div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;">
       <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:13px;">🔵 Monsoon III Jet Ventilator</div>
       <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:13px;">🔵 Blue-tip jet connecting tube</div>
       <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:13px;">🔴 Red-tip airway pressure sensing tube</div>
@@ -906,19 +1045,22 @@
 
   <div class="card">
     <div class="card-title"><div class="icon icon-green">🗺️</div> Patient Orientation Determines Setup</div>
+
     <div class="orient-grid">
       <div class="orient-card" id="orient-head" onclick="selectOrient('head')">
         <div class="orient-icon">🧠</div>
         <div class="orient-title">Head to Scanner</div>
         <div class="orient-sub">Liver / Lung Ablation<br>Jet behind gantry<br>TcCO₂ at feet</div>
+        <div style="margin-top:10px;font-family:'DM Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:1px;">TAP FOR DETAILS ↓</div>
       </div>
       <div class="orient-card" id="orient-feet" onclick="selectOrient('feet')">
         <div class="orient-icon">🦶</div>
         <div class="orient-title">Feet to Scanner</div>
         <div class="orient-sub">Renal / Some Livers<br>Jet in front of gantry<br>TcCO₂ at head</div>
+        <div style="margin-top:10px;font-family:'DM Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:1px;">TAP FOR DETAILS ↓</div>
       </div>
     </div>
-    <div id="orient-note" style="display:none;padding:14px;background:var(--surface2);border-radius:10px;font-size:13px;line-height:1.7;"></div>
+    <div id="orient-note" style="display:none;padding:14px;background:var(--surface2);border-radius:10px;font-size:13px;line-height:1.7;border-left:3px solid var(--accent);"></div>
   </div>
 
   <div style="display:flex;gap:12px;flex-wrap:wrap;">
@@ -965,6 +1107,7 @@
 
   <div class="card">
     <div class="card-title"><div class="icon icon-orange">🛠️</div> ETT &amp; Adapter Prep</div>
+
     <ul class="checklist" id="cl-ett">
       <li class="check-item" onclick="toggleCheck(this,'ett')">
         <div class="check-box"></div>
@@ -993,6 +1136,7 @@
 
   <div class="card">
     <div class="card-title"><div class="icon icon-green">📡</div> TcCO₂ Monitor Setup</div>
+
     <ul class="checklist" id="cl-tcco2">
       <li class="check-item" onclick="toggleCheck(this,'tcco2')">
         <div class="check-box"></div>
@@ -1001,7 +1145,7 @@
       <li class="check-item" onclick="toggleCheck(this,'tcco2')">
         <div class="check-box"></div>
         <div class="check-text">Attach TcCO₂ probe immediately after moving patient to procedure table
-          <div class="check-sub">Needs 2–10 min to calibrate. Remove both adhesive covers. Apply contact gel drops.</div>
+          <div class="check-sub">Needs 2–10 min to calibrate. Remove both adhesive covers. Apply contact gel drops (1–2 drops).</div>
         </div>
       </li>
       <li class="check-item" onclick="toggleCheck(this,'tcco2')">
@@ -1120,12 +1264,12 @@
                 <div class="knob-val" id="knob-freq">150</div>
                 <button class="knob-btn" onclick="adjustVal('freq',10)" style="font-size:12px;">+</button>
               </div>
-              <div style="font-size:11px;color:var(--muted);margin-top:6px;">Last resort only</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:6px;">Do not adjust</div>
             </div>
           </div>
 
           <div id="freq-warn" style="display:none;background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.4);border-radius:8px;padding:10px 14px;font-size:12px;color:#fbbf24;margin-bottom:12px;line-height:1.5;">
-            ⚠ Frequency adjusted from default. Per protocol, frequency change is a <strong>last resort</strong> only — use DP adjustment first.
+            ⚠ Frequency adjusted from default. Frequency should <strong>not</strong> be changed — 150 cpm is the FDA limit in the US. Reducing frequency increases target movement and is not recommended. Use DP adjustment instead.
           </div>
 
           <div class="machine-btn-row">
@@ -1170,10 +1314,65 @@
 
       <div class="card">
         <div class="card-title"><div class="icon icon-orange">⚙️</div> CO₂ Management</div>
+
+        <figure style="margin-bottom:14px;">
+          <svg viewBox="0 0 500 252" role="img" aria-label="CO2 decision flow: check TcCO2 value every 15 minutes, if high above 60 increase DP 1-2 psi, if low below 25 decrease DP 1-2 psi, if 25-60 acceptable range; post-scan changes require Faculty discussion first">
+            <defs>
+              <marker id="arr3" markerWidth="8" markerHeight="7" refX="6" refY="3.5" orient="auto">
+                <polygon points="0 0, 8 3.5, 0 7" fill="currentColor"/>
+              </marker>
+              <marker id="arr3r" markerWidth="8" markerHeight="7" refX="6" refY="3.5" orient="auto">
+                <polygon points="0 0, 8 3.5, 0 7" fill="#b91c1c"/>
+              </marker>
+              <marker id="arr3g" markerWidth="8" markerHeight="7" refX="6" refY="3.5" orient="auto">
+                <polygon points="0 0, 8 3.5, 0 7" fill="#166534"/>
+              </marker>
+              <marker id="arr3b" markerWidth="8" markerHeight="7" refX="6" refY="3.5" orient="auto">
+                <polygon points="0 0, 8 3.5, 0 7" fill="#1d6fa4"/>
+              </marker>
+            </defs>
+
+            <!-- CHECK TcCO2 box — top center -->
+            <rect x="165" y="12" width="170" height="46" rx="10" fill="#dbeeff" stroke="#1d6fa4" stroke-width="2"/>
+            <text x="250" y="33" text-anchor="middle" font-family="monospace" font-size="13" fill="#1d6fa4" font-weight="700">CHECK TcCO₂</text>
+            <text x="250" y="50" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#374151">every 15 min</text>
+
+            <!-- Arrow down to diamond -->
+            <line x1="250" y1="58" x2="250" y2="88" stroke="currentColor" stroke-width="2" marker-end="url(#arr3)"/>
+
+            <!-- Decision diamond — center -->
+            <polygon points="250,90 310,125 250,160 190,125" fill="#f8fafc" stroke="#334155" stroke-width="2"/>
+            <text x="250" y="120" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0f172a">TcCO₂</text>
+            <text x="250" y="137" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0f172a">value?</text>
+
+            <!-- LEFT: HIGH arrow + box -->
+            <line x1="190" y1="125" x2="112" y2="125" stroke="#b91c1c" stroke-width="2" marker-end="url(#arr3r)"/>
+            <text x="152" y="115" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#b91c1c" font-weight="600">&gt; 60</text>
+            <rect x="12" y="100" width="100" height="50" rx="9" fill="rgba(185,28,28,0.07)" stroke="#b91c1c" stroke-width="2"/>
+            <text x="62" y="121" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#b91c1c" font-weight="700">HIGH</text>
+            <text x="62" y="140" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#b91c1c">↑ DP 1–2 psi</text>
+
+            <!-- RIGHT: LOW arrow + box -->
+            <line x1="310" y1="125" x2="388" y2="125" stroke="#1d6fa4" stroke-width="2" marker-end="url(#arr3b)"/>
+            <text x="348" y="115" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1d6fa4" font-weight="600">&lt; 25</text>
+            <rect x="388" y="100" width="100" height="50" rx="9" fill="rgba(29,111,164,0.07)" stroke="#1d6fa4" stroke-width="2"/>
+            <text x="438" y="121" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1d6fa4" font-weight="700">LOW</text>
+            <text x="438" y="140" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1d6fa4">↓ DP 1–2 psi</text>
+
+            <!-- DOWN: ACCEPTABLE arrow + box -->
+            <line x1="250" y1="160" x2="250" y2="188" stroke="#166534" stroke-width="2" marker-end="url(#arr3g)"/>
+            <text x="264" y="178" text-anchor="start" font-family="sans-serif" font-size="11" fill="#166534" font-weight="600">25–60</text>
+            <rect x="100" y="190" width="300" height="56" rx="10" fill="rgba(21,128,61,0.07)" stroke="#166534" stroke-width="2"/>
+            <text x="250" y="219" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#166534" font-weight="700">ACCEPTABLE RANGE</text>
+            <text x="250" y="236" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#166534">If SpO₂ drops → ↑ FiO₂ first</text>
+          </svg>
+          <figcaption style="color:#b91c1c;">CO₂ MANAGEMENT FLOW — DP is the primary adjustment knob; no changes post-initial scan without Faculty discussion</figcaption>
+        </figure>
+
         <div id="management-guide" style="font-size:13px;line-height:1.9;color:#0f172a;">
           <div style="margin-bottom:10px;padding:10px 14px;background:rgba(239,68,68,0.08);border-radius:8px;border-left:3px solid var(--danger);">
             <strong>High TcCO₂ (hypoventilation)</strong><br>
-            ↑ DP by 1–2 psi · Last resort: ↓ Freq by 5–10 cpm
+            ↑ DP by 1–2 psi · <em>Discuss with Anesthesia &amp; IR Faculty before any change after initial scan</em>
           </div>
           <div style="margin-bottom:10px;padding:10px 14px;background:rgba(0,212,255,0.08);border-radius:8px;border-left:3px solid var(--accent);">
             <strong>Low TcCO₂ (hyperventilation)</strong><br>
@@ -1199,7 +1398,7 @@
       <div class="scenario-card" onclick="loadScenario('co2high')">
         <div class="scenario-tag tag-caution">CO₂ MANAGEMENT</div>
         <div class="scenario-title">Rising TcCO₂ After Initial Scan</div>
-        <div class="scenario-desc">Your TcCO₂ has been climbing from 42 to 58 mmHg over 10 minutes. The initial scan is complete.</div>
+        <div class="scenario-desc">TcCO₂ climbs from 42 to 58 mmHg. The initial scan is complete. Who do you call first?</div>
       </div>
       <div class="scenario-card" onclick="loadScenario('alarm')">
         <div class="scenario-tag tag-urgent">ALARM</div>
@@ -1209,7 +1408,7 @@
       <div class="scenario-card" onclick="loadScenario('hypoxia')">
         <div class="scenario-tag tag-urgent">HYPOXIA</div>
         <div class="scenario-title">SpO₂ Drops to 88%</div>
-        <div class="scenario-desc">Four minutes into jet ventilation, SpO₂ drops to 88% on FiO₂ 50%. Chest is moving.</div>
+        <div class="scenario-desc">Mid-case, SpO₂ drops to 88% on FiO₂ 50%. The initial scan is complete. What can you do?</div>
       </div>
 
       <div class="scenario-card" onclick="loadScenario('initiate')">
@@ -1258,7 +1457,7 @@
       <div class="card-title"><div class="icon icon-orange">🔧</div> Troubleshooting</div>
       <table>
         <tr><th>PROBLEM</th><th>ACTION</th></tr>
-        <tr><td>↑ TcCO₂</td><td>↑ DP 1–2 psi<br><span class="val-range">Last resort: ↓ Freq 5–10</span></td></tr>
+        <tr><td>↑ TcCO₂</td><td>↑ DP 1–2 psi<br><span class="val-range">After initial scan: discuss with Faculty first</span></td></tr>
         <tr><td>↓ TcCO₂</td><td>↓ DP 1–2 psi</td></tr>
         <tr><td>↓ SpO₂</td><td>↑ FiO₂ · ↑ IT 5% · ↑ Vent flow · ↑ DP 2</td></tr>
         <tr><td>PP/PIP Alarm</td><td>Check tubing kink · Check paralysis · Open APL · Suction</td></tr>
@@ -1315,6 +1514,13 @@ function selectOrient(type) {
   document.getElementById('orient-head').classList.remove('selected');
   document.getElementById('orient-feet').classList.remove('selected');
   document.getElementById('orient-'+type).classList.add('selected');
+  // hide "tap" prompts on selected card
+  document.querySelectorAll('.orient-card').forEach(function(c) {
+    var lbl = c.querySelector('.tap-hint');
+    if (lbl) lbl.style.display = 'block';
+  });
+  var hint = document.querySelector('#orient-'+type+' .tap-hint');
+  if (hint) hint.style.display = 'none';
   const note = document.getElementById('orient-note');
   note.style.display = 'block';
   if (type === 'head') {
@@ -1323,6 +1529,19 @@ function selectOrient(type) {
     note.innerHTML = '🟠 <strong>Feet to Scanner (Renal/Some Livers):</strong><br>• Jet ventilator placed <strong>in front</strong> of gantry, opposite side from IR physician<br>• TcCO₂ monitor at <strong>head</strong><br>• Can initiate jet ventilation immediately after intubation';
   }
 }
+// Auto-expand Head on load + set dynamic top-bar offset
+function setTopBarOffset() {
+  var tb = document.querySelector('.top-bar');
+  if (tb) {
+    var h = tb.getBoundingClientRect().height;
+    document.documentElement.style.setProperty('--top-bar-h', (h + 4) + 'px');
+  }
+}
+window.addEventListener('DOMContentLoaded', function() {
+  try { selectOrient('head'); } catch(e) {}
+  setTopBarOffset();
+});
+window.addEventListener('resize', setTopBarOffset);
 
 // CHECKLIST
 let checks = {pre:0, ett:0, tcco2:0, jet:0};
@@ -1389,7 +1608,7 @@ function startJet() {
         if (jetRunning) document.getElementById('tcco2-status').innerText = 'Stabilized \u2713 \u2014 monitor q15min';
       } catch(e) {}
     }, 3000);
-    tcco2Interval = setInterval(simulateTcco2, 4000);
+    tcco2Interval = setInterval(simulateTcco2, 10000);
   } catch(e) {}
 }
 
@@ -1472,22 +1691,16 @@ const scenarios = {
     tag: "CO₂ MANAGEMENT",
     questions: [
       {
-        q: "TcCO₂ has risen from 42 to 58 mmHg over 10 minutes. The initial scan is complete. What is your FIRST intervention?",
-        options: ["Decrease Frequency from 150 to 140 cpm", "Increase Driving Pressure by 1–2 psi", "Switch back to conventional ventilation immediately", "Increase FiO₂ to 80%"],
-        correct: 1,
-        feedback: "Correct. Increasing DP is the first-line adjustment for high TcCO₂. DP drives tidal volume delivery — higher pressure inflates more lung and improves CO₂ clearance. Adjusting frequency is a last resort and should only be done if DP changes are insufficient."
+        q: "⚠ Note: Settings should NOT be changed after the initial scan without Faculty discussion.\n\nTcCO₂ has risen from 42 to 58 mmHg over 10 minutes. The initial scan is complete. What is your FIRST step?",
+        options: ["Increase Driving Pressure by 1–2 psi immediately", "Decrease Frequency from 150 to 140 cpm", "Contact Anesthesia Faculty and discuss with IR Faculty before making any changes", "Switch back to conventional ventilation immediately"],
+        correct: 2,
+        feedback: "Correct. Because the initial scan has already been completed, NO settings should be changed without first discussing with the Anesthesia Faculty and IR Faculty. The team will assess whether permissive hypercapnia (TcCO₂ up to 60 mmHg) is acceptable to continue the case, or whether a change is warranted. Independent adjustments after the initial scan are not appropriate."
       },
       {
-        q: "You've increased DP to 22 psi and TcCO₂ is now 62 mmHg and still climbing. What do you do?",
-        options: ["Further increase DP to 28 psi and wait", "Decrease frequency by 5–10 cpm as a last resort", "Notify IR and consider switching to conventional ventilation", "Do both B and C — decrease frequency and communicate with IR"],
-        correct: 3,
-        feedback: "Correct. When first-line DP adjustment is inadequate, decreasing frequency (last resort) may help by allowing larger tidal volumes. Critically, the protocol states permissive hypercapnia (TcCO₂ up to 60) is acceptable, and conventional ventilation is always available. Communicating with IR is essential before any setting changes post-initial scan."
-      },
-      {
-        q: "After the initial scan, TcCO₂ rises to 60 mmHg. The IR physician says 'just leave it.' What is acceptable?",
-        options: ["TcCO₂ of 60 mmHg is always dangerous — switch to conventional vent", "TcCO₂ of 60 mmHg is at the upper limit of permissive range; monitor closely", "Any TcCO₂ above ETCO₂ is a problem requiring immediate intervention", "Nothing — TcCO₂ monitoring is optional during HFJV"],
+        q: "After Faculty discussion, the team agrees TcCO₂ of 58 mmHg is acceptable and the procedure continues. What range is considered 'permissive' during HFJV?",
+        options: ["TcCO₂ must be kept at exactly 40 mmHg at all times", "TcCO₂ 25–60 mmHg is generally safe during the jet phase", "Any TcCO₂ above 50 mmHg requires immediate switch to conventional vent", "TcCO₂ monitoring is optional — ETCO₂ is sufficient during HFJV"],
         correct: 1,
-        feedback: "Correct. The protocol states TcCO₂ 25–60 mmHg is generally safe since values normalize after returning to conventional ventilation. At 60 mmHg you are at the upper boundary of the permissive range — monitor closely and be ready to act, but discuss any changes with the anesthesiologist and IR physician before adjusting settings post-initial scan."
+        feedback: "Correct. The protocol states TcCO₂ 25–60 mmHg is generally safe during HFJV, because values normalize readily after returning to conventional ventilation at the end of the case. This permissive range allows the procedure to continue without interruption as long as the team has discussed and agreed."
       }
     ]
   },
@@ -1523,13 +1736,13 @@ const scenarios = {
         q: "SpO₂ drops to 88% on FiO₂ 50%. Chest is moving and jet appears to be running normally. First intervention?",
         options: ["Increase FiO₂", "Immediately switch to conventional ventilation", "Decrease driving pressure", "Increase frequency to 160"],
         correct: 0,
-        feedback: "Correct. First-line for hypoxia during HFJV is to increase FiO₂. This is the quickest and lowest-risk intervention. HFJV inherently delivers less PEEP and smaller tidal volumes, so FiO₂ adjustment is the safest first step."
+        feedback: "Correct. Increasing FiO₂ is the safest immediate step because it does not change the ventilator mechanics or disrupt the ablation. Switching to conventional ventilation or performing a recruitment maneuver would interrupt the procedure — those decisions require Faculty discussion. Decreasing DP would worsen ventilation and is not appropriate for hypoxia."
       },
       {
-        q: "FiO₂ is now 80% and SpO₂ is 91%. What additional adjustments can help oxygenation?",
-        options: ["Increase inspiratory time (IT) by 5%", "Increase ventilator flow by 0.5–1 LPM to create PEEP effect", "Increase DP by 2 psi", "All of the above are appropriate"],
-        correct: 3,
-        feedback: "Correct. All three are appropriate for persistent hypoxia: increasing IT improves mean airway pressure and oxygenation; increasing ventilator background flow creates a PEEP effect; increasing DP improves overall ventilation. Consider all three in combination for refractory hypoxia."
+        q: "⚠ Note: The initial scan has been completed. FiO₂ is now 80% and SpO₂ is 91%. What is the appropriate next step?",
+        options: ["Increase inspiratory time (IT) by 5% and increase DP by 2 psi", "Confirm bilateral breath sounds and suction the ETT", "Perform a recruitment maneuver and take over ventilation", "Switch to SIMV at high tidal volume"],
+        correct: 1,
+        feedback: "Correct. Since the initial scan is done, changing ventilator settings (IT, DP) requires Faculty discussion first. The immediate safe steps are: (1) confirm bilateral breath sounds to rule out a mechanical issue or mainstem intubation, and (2) suction the ETT to clear any mucus obstruction. Recruitment maneuvers and taking over ventilation would interrupt the procedure and also represent significant setting changes — those decisions require Faculty input."
       }
     ]
   },
@@ -1687,3 +1900,5 @@ function showResults() {
 </script>
 </body>
 </html>
+
+</body></html>
