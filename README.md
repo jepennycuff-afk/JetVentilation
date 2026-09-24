@@ -43,7 +43,7 @@ All images are in `assets/`:
 | File | Used for |
 |---|---|
 | `how-it-works.jpg` | Conventional vs jet breathing (Overview) |
-| `room-layout.jpg` | Head vs feet to scanner (Overview) |
+| `room-head-to-scanner.jpg`, `room-feet-to-scanner.jpg` | Patient orientation cards (Overview) |
 | `ett-adapter.jpg` | Labeled ETT + swivel adapter illustration (Setup, step 2) |
 | `ett-adapter-photo.jpg` | Real photo of the assembled tube (Setup, step 2) |
 | `icon-*.png` | Scenario card icons |
