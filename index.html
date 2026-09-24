@@ -1,52 +1,51 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HFJV Simulation — Monsoon Jet Ventilator</title>
+<title>HFJV Simulator — Monsoon III Jet Ventilation</title>
+<meta name="description" content="Training simulation for high-frequency jet ventilation (Monsoon III) during IR procedures.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap');
-
   :root {
     --bg: #ffffff;
     --surface: #ffffff;
     --surface2: #f8fafc;
     --border: #dde3ec;
     --accent: #1d6fa4;
+    --accent-soft: #eff6ff;
     --accent2: #e07b39;
-    --warn: #b45309;
+    --warn: #92400e;
+    --warn-bg: #fffbeb;
     --danger: #b91c1c;
+    --danger-bg: #fef2f2;
     --success: #166534;
+    --success-bg: #f0fdf4;
     --text: #0f172a;
     --muted: #374151;
     --dim: #9ca3af;
+    --mono: 'DM Mono', ui-monospace, monospace;
+    --display: 'Syne', 'DM Sans', sans-serif;
   }
 
-  html { background: #ffffff; }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
+  html { background: var(--bg); }
   body {
-    font-family: 'DM Sans', sans-serif;
-    background: #ffffff;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
     color: var(--text);
     min-height: 100vh;
     overflow-x: hidden;
+    line-height: 1.5;
   }
+  img { max-width: 100%; height: auto; display: block; }
+  [hidden] { display: none !important; }
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid rgba(29,111,164,0.55); outline-offset: 2px; border-radius: 6px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-  /* HEADER */
-  .top-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    overflow: hidden; /* prevent vertical scroll bleed */
-  }
-
+  /* HEADER + NAV */
   header {
     background: linear-gradient(135deg, #e8f4fd 0%, #dbeeff 100%);
     border-bottom: 2px solid #b8d9f5;
@@ -55,972 +54,491 @@
     align-items: center;
     justify-content: space-between;
   }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-
+  .logo { display: flex; align-items: center; gap: 14px; }
   .logo-icon {
-    width: 42px;
-    height: 42px;
+    width: 42px; height: 42px; border-radius: 10px;
     background: linear-gradient(135deg, #1d6fa4, #0ea5e9);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
   }
-
-  .logo-text {
-    font-family: 'Syne', sans-serif;
-    font-size: 18px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-  }
-
-  .logo-sub {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: #1d6fa4;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-  }
-
-  .logo-text { color: #0f172a; }
-
+  .logo-text { font-family: var(--display); font-size: 18px; font-weight: 800; letter-spacing: -0.5px; }
+  .logo-sub { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; }
   .badge {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    background: rgba(29,111,164,0.1);
-    border: 1px solid rgba(29,111,164,0.35);
-    color: #1d6fa4;
-    padding: 5px 12px;
-    border-radius: 20px;
-    letter-spacing: 1px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 1px;
+    background: rgba(29,111,164,0.1); border: 1px solid rgba(29,111,164,0.35); color: var(--accent);
+    padding: 5px 12px; border-radius: 20px;
   }
-
-  /* NAV TABS */
   .nav {
-    display: flex;
-    gap: 0;
-    padding: 0 8px;
-    border-bottom: 2px solid var(--border);
+    position: sticky; top: 0; z-index: 50;
+    display: flex; padding: 0 8px; height: 46px;
     background: var(--surface);
-    overflow-x: auto;
-    overflow-y: hidden; /* kill vertical scroll */
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+    border-bottom: 2px solid var(--border);
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    height: 46px; /* fixed height prevents vertical scroll */
-    align-items: stretch;
+    overflow-x: auto; overflow-y: hidden; scrollbar-width: none;
   }
   .nav::-webkit-scrollbar { display: none; }
-
   .nav-tab {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    padding: 0 16px;
-    border: none;
-    background: transparent;
-    color: var(--muted);
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -2px;
-    transition: all 0.2s;
-    white-space: nowrap;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.5px; text-transform: uppercase;
+    padding: 0 16px; border: none; background: transparent; color: var(--muted);
+    border-bottom: 2px solid transparent; margin-bottom: -2px;
+    cursor: pointer; white-space: nowrap; flex-shrink: 0; transition: color 0.2s;
   }
-
   .nav-tab:hover { color: var(--text); }
-  .nav-tab.active {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-  }
+  .nav-tab[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
 
-  /* MAIN LAYOUT */
-  .main {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 24px 16px;
-    padding-top: var(--top-bar-h, 120px);
-    background: #ffffff;
-    overflow-x: hidden;
-    width: 100%;
-  }
-
+  /* LAYOUT */
+  .main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; }
   .section { display: none; }
   .section.active { display: block; }
+  .section-title { font-family: var(--display); font-size: 26px; font-weight: 800; margin-bottom: 6px; }
+  .section-sub { font-size: 15px; color: var(--muted); margin-bottom: 22px; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .two-col > * { min-width: 0; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
 
   /* CARDS */
   .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 24px;
-    margin-bottom: 20px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    padding: 22px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
   }
-
   .card-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    font-family: var(--display); font-size: 16px; font-weight: 700;
+    margin-bottom: 14px; display: flex; align-items: center; gap: 10px;
   }
-
   .card-title .icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    flex-shrink: 0;
+    width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 16px;
   }
-
   .icon-blue { background: rgba(29,111,164,0.12); }
-  .icon-orange { background: rgba(224,123,57,0.12); }
+  .icon-orange { background: rgba(224,123,57,0.14); }
   .icon-yellow { background: rgba(217,119,6,0.12); }
   .icon-green { background: rgba(21,128,61,0.12); }
   .icon-red { background: rgba(220,38,38,0.12); }
+  .card p { font-size: 14px; line-height: 1.7; }
+  .bullets { font-size: 14px; line-height: 1.7; padding-left: 20px; }
+  .bullets li + li { margin-top: 4px; }
 
-  /* SETUP CHECKLIST */
-  .checklist {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  .info-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--warn-bg); border: 1px solid rgba(217,119,6,0.35); border-radius: 8px;
+    padding: 10px 16px; font-size: 13px; color: var(--warn); margin-bottom: 20px;
   }
 
+  /* GOLDEN RULE */
+  .golden {
+    display: flex; gap: 14px; align-items: flex-start;
+    background: #fff7ed; border: 2px solid #fdba74; border-radius: 14px;
+    padding: 16px 18px; margin-bottom: 20px;
+  }
+  .golden-icon { font-size: 26px; line-height: 1; }
+  .golden-title { font-family: var(--display); font-weight: 800; font-size: 15px; color: #9a3412; margin-bottom: 4px; }
+  .golden ol { font-size: 14px; line-height: 1.6; padding-left: 18px; color: #431407; }
+  .golden .golden-foot { font-size: 13px; color: #7c2d12; margin-top: 6px; }
+
+  /* BUTTONS */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 11px 22px; border-radius: 8px; border: none;
+    background: var(--accent); color: #fff;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 1px; font-weight: 500;
+    cursor: pointer; transition: background 0.2s; text-decoration: none; min-height: 42px;
+  }
+  .btn:hover { background: #155e82; }
+  .btn:disabled { background: #e5e7eb; color: #6b7280; cursor: not-allowed; }
+  .btn-ghost { background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
+  .btn-ghost:hover { background: var(--surface2); color: var(--text); border-color: var(--accent); }
+  .btn-sm { padding: 7px 12px; min-height: 34px; font-size: 11px; }
+  .link-btn { background: none; border: none; color: var(--accent); cursor: pointer; font-size: 13px; text-decoration: underline; padding: 4px 0; }
+
+  /* FIGURES */
+  figure {
+    margin: 0 0 18px 0; background: var(--surface2);
+    border: 1px solid var(--border); border-radius: 12px; padding: 16px 16px 10px; overflow: hidden;
+  }
+  figure svg { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+  figure img { margin: 0 auto; border-radius: 8px; }
+  figcaption { font-size: 13px; color: var(--muted); text-align: center; margin-top: 10px; line-height: 1.5; }
+  figure.photo { background: #fff; }
+  .fig-pair { display: grid; grid-template-columns: 3fr 2fr; gap: 14px; }
+  .fig-pair figure { margin-bottom: 0; }
+
+  /* TIMELINE */
+  .timeline { list-style: none; position: relative; padding-left: 30px; }
+  .timeline::before { content: ''; position: absolute; left: 10px; top: 6px; bottom: 6px; width: 2px; background: var(--border); }
+  .timeline li { position: relative; padding: 6px 0 10px; font-size: 14px; }
+  .timeline li::before {
+    content: ''; position: absolute; left: -25px; top: 10px; width: 12px; height: 12px;
+    border-radius: 50%; background: #fff; border: 2px solid var(--accent);
+  }
+  .timeline .tl-phase { font-family: var(--mono); font-size: 11px; letter-spacing: 1px; color: var(--accent); text-transform: uppercase; }
+  .timeline .tl-what { color: var(--text); }
+  .timeline li.lock { background: #fff7ed; border: 1px solid #fdba74; border-radius: 10px; padding: 8px 12px; margin: 4px 0 10px -8px; }
+  .timeline li.lock::before { left: -17px; top: 14px; background: #ea580c; border-color: #ea580c; }
+  .timeline li.lock .tl-phase { color: #9a3412; }
+
+  /* ORIENTATION */
+  .orient-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .orient-card {
+    background: var(--surface2); border: 2px solid var(--border); border-radius: 12px;
+    padding: 16px; cursor: pointer; text-align: center; transition: all 0.2s; width: 100%;
+  }
+  .orient-card:hover { border-color: var(--accent); background: var(--accent-soft); }
+  .orient-card[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+  .orient-icon { font-size: 30px; margin-bottom: 6px; }
+  .orient-title { font-family: var(--display); font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .orient-sub { font-size: 12px; color: var(--muted); }
+  .orient-note { padding: 14px; background: var(--surface2); border-radius: 10px; font-size: 14px; line-height: 1.7; border-left: 3px solid var(--accent); }
+
+  .equip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+  .equip-grid div { padding: 10px 12px; background: var(--surface2); border-radius: 8px; font-size: 13px; }
+
+  /* SETUP STEPPER */
+  .progress-wrap { margin-bottom: 16px; }
+  .progress-label { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; width: 0; background: linear-gradient(90deg, #1d6fa4, #0ea5e9); transition: width 0.4s ease; }
+  .stepper { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
+  .step-pill {
+    flex: 1 0 auto; display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+    padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface);
+    cursor: pointer; text-align: left; min-width: 110px;
+  }
+  .step-pill .sp-num { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; color: var(--muted); }
+  .step-pill .sp-name { font-size: 13px; font-weight: 500; }
+  .step-pill[aria-current="step"] { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 -3px 0 var(--accent); }
+  .step-pill.complete .sp-num { color: var(--success); }
+
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 8px; }
   .check-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 12px 16px;
-    background: var(--surface2);
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    cursor: pointer;
-    transition: all 0.2s;
+    display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px;
+    background: var(--surface2); border-radius: 10px; border: 1px solid var(--border);
+    cursor: pointer; transition: border-color 0.2s, opacity 0.2s;
   }
-
   .check-item:hover { border-color: var(--accent); }
-  .check-item.done { opacity: 0.5; }
-  .check-item.done .check-box { background: var(--success); border-color: var(--success); }
-  .check-item.done .check-box::after { content: '✓'; color: white; font-size: 12px; }
-
+  .check-item:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(29,111,164,0.2); }
   .check-box {
-    width: 22px;
-    height: 22px;
-    border: 2px solid var(--dim);
-    border-radius: 5px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    margin-top: 1px;
+    width: 22px; height: 22px; border: 2px solid var(--dim); border-radius: 5px; flex-shrink: 0; margin-top: 1px;
+    display: flex; align-items: center; justify-content: center; transition: all 0.2s; background: #fff;
   }
-
+  .check-item input:checked + .check-box { background: var(--success); border-color: var(--success); }
+  .check-item input:checked + .check-box::after { content: '✓'; color: #fff; font-size: 13px; }
+  .check-item.done .check-text { color: #6b7280; }
   .check-text { font-size: 14px; line-height: 1.5; }
-  .check-sub { font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .check-sub { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+  .check-item.done .check-sub { color: #6b7280; }
+  .phase-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+  .complete-banner { text-align: center; padding: 18px; }
 
-  /* PROGRESS BAR */
-  .progress-wrap {
-    margin-bottom: 20px;
-  }
-  .progress-label {
-    display: flex;
-    justify-content: space-between;
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 8px;
-  }
-  .progress-bar {
-    height: 6px;
-    background: var(--border);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #1d6fa4, #0ea5e9);
-    border-radius: 3px;
-    transition: width 0.4s ease;
-    width: 0%;
-  }
-
-  /* MONSOON MACHINE VISUAL */
-  .machine-visual {
-    background: #f0f6ff;
-    border: 1px solid #b8d9f5;
-    border-radius: 14px;
-    padding: 24px;
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .machine-body {
-    background: #ffffff;
-    border: 2px solid #b8d9f5;
-    border-radius: 16px;
-    padding: 24px;
-    width: 100%;
-    max-width: 480px;
-    box-shadow: 0 4px 16px rgba(29,111,164,0.08);
-  }
-
-  .machine-label {
-    font-family: 'Syne', sans-serif;
-    font-size: 20px;
-    font-weight: 800;
-    color: #1d6fa4;
-    text-align: center;
-    letter-spacing: 3px;
-    margin-bottom: 4px;
-  }
-
-  .machine-sublabel {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: #64748b;
-    text-align: center;
-    letter-spacing: 2px;
-    margin-bottom: 20px;
-  }
-
-  .display-panel {
-    background: #dbeeff;
-    border: 1px solid #93c5fd;
-    border-radius: 10px;
-    padding: 16px;
-    margin-bottom: 16px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-
-  .display-value {
-    text-align: center;
-  }
-
-  .display-value .label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: #1d6fa4;
-    letter-spacing: 2px;
-    margin-bottom: 4px;
-    font-weight: 600;
-  }
-
-  .display-value .val {
-    font-family: 'DM Mono', monospace;
-    font-size: 28px;
-    font-weight: 600;
-    color: #0f4c75;
-    line-height: 1;
-  }
-
-  .display-value .unit {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: #374151;
-    margin-top: 3px;
-  }
-
-  .control-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-
-  .knob-group {
-    background: #eef6ff;
-    border: 1px solid #b8d9f5;
-    border-radius: 10px;
-    padding: 14px;
-    text-align: center;
-  }
-
-  .knob-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: #374151;
-    letter-spacing: 2px;
-    margin-bottom: 10px;
-  }
-
-  .knob-controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-  }
-
+  /* SIMULATOR */
+  .machine-visual { background: #f0f6ff; border: 1px solid #b8d9f5; border-radius: 14px; padding: 18px; margin-bottom: 20px; }
+  .machine-body { background: #fff; border: 2px solid #b8d9f5; border-radius: 16px; padding: 20px; box-shadow: 0 4px 16px rgba(29,111,164,0.08); }
+  .machine-label { font-family: var(--display); font-size: 20px; font-weight: 800; color: var(--accent); text-align: center; letter-spacing: 3px; }
+  .machine-sublabel { font-family: var(--mono); font-size: 10px; color: #475569; text-align: center; letter-spacing: 2px; margin-bottom: 16px; }
+  .control-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .knob-group { background: #eef6ff; border: 1px solid #b8d9f5; border-radius: 10px; padding: 12px; text-align: center; }
+  .knob-group.locked { background: #fff7ed; border-color: #fdba74; }
+  .knob-label { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 1.5px; margin-bottom: 8px; }
+  .knob-controls { display: flex; align-items: center; justify-content: center; gap: 10px; }
   .knob-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: 2px solid #b8d9f5;
-    background: #ffffff;
-    color: #1d6fa4;
-    font-size: 18px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s;
-    line-height: 1;
+    width: 40px; height: 40px; border-radius: 50%; border: 2px solid #b8d9f5; background: #fff; color: var(--accent);
+    font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1;
   }
+  .knob-btn:hover { border-color: var(--accent); background: #dbeeff; }
+  .knob-val { font-family: var(--mono); font-size: 24px; color: #0f4c75; min-width: 52px; font-weight: 500; }
+  .knob-unit { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .machine-btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .machine-btn { padding: 11px 18px; border-radius: 8px; border: none; font-family: var(--mono); font-size: 12px; letter-spacing: 1px; cursor: pointer; min-height: 44px; }
+  .btn-start { background: var(--success); color: #fff; }
+  .btn-start:hover { background: #15803d; }
+  .btn-stop { background: var(--danger); color: #fff; }
+  .btn-reset { background: #f1f5f9; color: var(--muted); border: 1px solid #cbd5e1; }
+  .btn-scan { background: #ea580c; color: #fff; }
+  .btn-scan:disabled { background: #e5e7eb; color: #6b7280; cursor: not-allowed; }
 
-  .knob-btn:hover {
-    border-color: #1d6fa4;
-    background: #dbeeff;
+  .motion-meter { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); margin: 4px 0 12px; }
+  .motion-bars { display: flex; gap: 3px; }
+  .motion-bars span { width: 18px; height: 8px; border-radius: 2px; background: var(--border); }
+  .motion-bars span.on { background: var(--accent2); }
+
+  .monitor-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .mon { border-radius: 10px; padding: 12px 10px; text-align: center; border: 2px solid var(--border); background: var(--surface2); }
+  .mon-label { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; color: var(--muted); font-weight: 500; }
+  .mon-val { font-family: var(--mono); font-size: 34px; font-weight: 500; line-height: 1.1; margin-top: 4px; }
+  .mon-status { font-size: 12px; margin-top: 4px; min-height: 18px; }
+  .mon.ok { border-color: #86efac; background: var(--success-bg); }
+  .mon.ok .mon-val, .mon.ok .mon-status { color: var(--success); }
+  .mon.bad { border-color: #fca5a5; background: var(--danger-bg); }
+  .mon.bad .mon-val, .mon.bad .mon-status { color: var(--danger); }
+  .mon.cal .mon-val { color: var(--dim); }
+  .mon-tcco2 .mon-val { font-size: 44px; }
+
+  .trend { position: relative; }
+  .trend svg { width: 100%; height: auto; display: block; touch-action: none; }
+  .trend-caption { font-size: 12px; color: var(--muted); margin-top: 4px; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+
+  .hint {
+    display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: 10px;
+    font-size: 14px; line-height: 1.55; background: var(--accent-soft); border-left: 4px solid var(--accent); margin-top: 12px;
   }
+  .hint.warn { background: var(--warn-bg); border-left-color: #d97706; }
+  .hint.danger { background: var(--danger-bg); border-left-color: var(--danger); }
+  .hint.good { background: var(--success-bg); border-left-color: var(--success); }
+  .hint-icon { font-size: 18px; line-height: 1.3; }
 
-  .knob-val {
-    font-family: 'DM Mono', monospace;
-    font-size: 22px;
-    color: #1d6fa4;
-    min-width: 52px;
-    text-align: center;
-    font-weight: 600;
-  }
+  .alarm-box { background: var(--danger-bg); border: 2px solid rgba(220,38,38,0.5); border-radius: 12px; padding: 14px 16px; margin-bottom: 20px; }
+  .alarm-box.silenced { border-style: dashed; }
+  .alarm-title { font-family: var(--mono); font-size: 13px; color: var(--danger); letter-spacing: 1.5px; font-weight: 500; margin-bottom: 6px; }
+  .alarm-box.sounding .alarm-title { animation: pulse 0.8s infinite; }
+  .alarm-text { font-size: 13px; line-height: 1.6; color: #7f1d1d; margin-bottom: 10px; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
 
-  .machine-btn-row {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-  }
+  .check-due { background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 10px; padding: 10px 14px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
 
-  .machine-btn {
-    padding: 10px 20px;
-    border-radius: 8px;
-    border: none;
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
+  .bedside-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+  .bedside-grid .btn { font-family: inherit; letter-spacing: 0; font-size: 13px; justify-content: flex-start; }
+  .event-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+  .event-btn { text-align: left; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface2); cursor: pointer; font-size: 13px; }
+  .event-btn:hover { border-color: var(--accent); background: var(--accent-soft); }
+  .event-btn[aria-pressed="true"] { border-color: var(--accent2); background: #fff7ed; }
+  .event-btn strong { display: block; font-size: 13px; }
+  .event-btn span { color: var(--muted); font-size: 12px; }
+  .sim-log { list-style: none; font-size: 13px; margin-top: 12px; max-height: 170px; overflow-y: auto; border-top: 1px solid var(--border); }
+  .sim-log li { padding: 6px 2px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; }
+  .sim-log time { font-family: var(--mono); font-size: 11px; color: var(--muted); flex-shrink: 0; padding-top: 2px; }
 
-  .btn-start {
-    background: var(--success);
-    color: white;
-  }
+  dialog { border: none; border-radius: 14px; padding: 22px; max-width: 420px; width: calc(100% - 32px); box-shadow: 0 20px 50px rgba(0,0,0,0.25); }
+  dialog::backdrop { background: rgba(15,23,42,0.45); }
+  dialog h3 { font-family: var(--display); font-size: 17px; margin-bottom: 8px; }
+  dialog p { font-size: 14px; color: var(--muted); margin-bottom: 16px; line-height: 1.6; }
 
-  .btn-start:hover { background: #16a34a; }
-  .btn-start:disabled { background: var(--dim); color: var(--muted); cursor: not-allowed; }
-
-  .btn-stop {
-    background: var(--danger);
-    color: white;
-  }
-
-  .btn-stop:hover { background: #dc2626; }
-
-  .btn-reset {
-    background: #f1f5f9;
-    color: #374151;
-    border: 1px solid #cbd5e1;
-  }
-
-  /* STATUS LIGHT */
-  .status-light {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--dim);
-    display: inline-block;
-    margin-right: 8px;
-  }
-
-  .status-light.on {
-    background: var(--success);
-    box-shadow: 0 0 8px var(--success);
-    animation: pulse 2s infinite;
-  }
-
-  .status-light.alarm {
-    background: var(--danger);
-    box-shadow: 0 0 8px var(--danger);
-    animation: pulse 0.5s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
-  }
-
-  /* ALARMS */
-  .alarm-box {
-    background: #fef2f2;
-    border: 1px solid rgba(220,38,38,0.4);
-    border-radius: 10px;
-    padding: 14px 18px;
-    margin-top: 16px;
-    display: none;
-  }
-
-  .alarm-box.visible { display: block; }
-
-  .alarm-title {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: var(--danger);
-    letter-spacing: 2px;
-    font-weight: 500;
-    margin-bottom: 8px;
-  }
-
-  .alarm-text { font-size: 13px; line-height: 1.6; color: #7f1d1d; }
-
-  /* TCCO2 MONITOR */
-  .tcco2-panel {
-    background: #e8f5e9;
-    border: 2px solid #a5d6a7;
-    border-radius: 10px;
-    padding: 20px 16px;
-    margin-top: 16px;
-    text-align: center;
-  }
-
-  .tcco2-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: #166534;
-    letter-spacing: 3px;
-    margin-bottom: 8px;
-    font-weight: 600;
-  }
-
-  .tcco2-value {
-    font-family: 'DM Mono', monospace;
-    font-size: 52px;
-    color: #166534;
-    font-weight: 600;
-    line-height: 1;
-  }
-
-  .tcco2-status {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: #15803d;
-    margin-top: 8px;
-  }
-
-  /* SCENARIO CARDS */
-  .scenario-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
-    margin-bottom: 24px;
-  }
-
+  /* SCENARIOS */
+  .scenario-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px; }
   .scenario-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-    cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    display: flex; gap: 14px; align-items: flex-start; text-align: left; width: 100%;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px;
+    cursor: pointer; transition: all 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
   }
-
-  .scenario-card:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(29,111,164,0.15);
-  }
-
-  .scenario-card.selected {
-    border-color: var(--accent);
-    background: rgba(29,111,164,0.04);
-  }
-
-  .scenario-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    padding: 3px 10px;
-    border-radius: 12px;
-    margin-bottom: 12px;
-    display: inline-block;
-  }
-
-  .tag-routine { background: rgba(21,128,61,0.1); color: var(--success); border: 1px solid rgba(21,128,61,0.2); }
-  .tag-caution { background: rgba(217,119,6,0.1); color: var(--warn); border: 1px solid rgba(217,119,6,0.2); }
-  .tag-urgent { background: rgba(220,38,38,0.1); color: var(--danger); border: 1px solid rgba(220,38,38,0.2); }
-
-  .scenario-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-
+  .scenario-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(29,111,164,0.15); }
+  .scenario-card img { width: 56px; height: 56px; border-radius: 50%; flex-shrink: 0; }
+  .scenario-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; padding: 2px 9px; border-radius: 12px; margin-bottom: 8px; display: inline-block; }
+  .tag-routine { background: rgba(21,128,61,0.1); color: var(--success); border: 1px solid rgba(21,128,61,0.25); }
+  .tag-caution { background: rgba(217,119,6,0.1); color: var(--warn); border: 1px solid rgba(217,119,6,0.3); }
+  .tag-urgent { background: rgba(220,38,38,0.1); color: var(--danger); border: 1px solid rgba(220,38,38,0.25); }
+  .scenario-title { font-family: var(--display); font-size: 15px; font-weight: 700; margin-bottom: 6px; }
   .scenario-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .scenario-best { font-family: var(--mono); font-size: 11px; color: var(--success); margin-top: 8px; }
+  .scenario-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; gap: 10px; flex-wrap: wrap; }
+  .step-indicator { display: flex; gap: 6px; margin-bottom: 16px; }
+  .step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--dim); transition: all 0.3s; }
+  .step-dot.active { background: var(--accent); transform: scale(1.4); }
+  .step-dot.done { background: var(--success); }
+  .quiz-note { font-size: 13px; background: #fff7ed; border: 1px solid #fdba74; color: #7c2d12; border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; }
+  .quiz-question { font-size: 15px; line-height: 1.6; margin-bottom: 16px; padding: 16px; background: var(--accent-soft); border-radius: 10px; border-left: 3px solid var(--accent); }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+  .quiz-option { padding: 13px 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); cursor: pointer; font-size: 14px; text-align: left; transition: all 0.2s; }
+  .quiz-option:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+  .quiz-option:disabled { cursor: default; }
+  .quiz-option.correct { border-color: var(--success); background: var(--success-bg); color: var(--success); font-weight: 500; }
+  .quiz-option.wrong { border-color: var(--danger); background: var(--danger-bg); color: var(--danger); }
+  .feedback-box { padding: 14px 16px; border-radius: 10px; font-size: 14px; line-height: 1.6; margin-bottom: 4px; }
+  .feedback-box.correct-fb { background: var(--success-bg); border: 1px solid rgba(21,128,61,0.3); color: #14532d; }
+  .feedback-box.wrong-fb { background: var(--danger-bg); border: 1px solid rgba(185,28,28,0.3); color: #7f1d1d; }
+  .feedback-box details { margin-top: 8px; }
+  .feedback-box summary { cursor: pointer; font-size: 13px; font-weight: 500; }
+  .feedback-box details p { margin-top: 6px; font-size: 13.5px; }
+  .score-display { text-align: center; padding: 32px 20px; }
+  .score-num { font-family: var(--mono); font-size: 64px; color: var(--accent); line-height: 1; margin-bottom: 8px; }
+  .score-label { font-family: var(--display); font-size: 18px; color: var(--muted); }
 
-  /* SCENARIO ACTIVE */
-  .scenario-active {
-    display: none;
+  /* REFERENCE */
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th { font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; color: var(--muted); text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); font-weight: 500; }
+  td { padding: 11px 12px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+  .val-accent { color: var(--accent); font-family: var(--mono); font-weight: 500; white-space: nowrap; }
+  .val-range { color: var(--muted); font-size: 12.5px; }
+  .flow { list-style: none; counter-reset: flow; display: flex; flex-direction: column; align-items: stretch; }
+  .flow li {
+    counter-increment: flow; position: relative; padding: 10px 14px 10px 48px; font-size: 14px;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 10px;
   }
-
-  .scenario-active.visible {
-    display: block;
+  .flow li::before {
+    content: counter(flow); position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    width: 24px; height: 24px; border-radius: 50%; background: var(--danger); color: #fff;
+    font-family: var(--mono); font-size: 12px; display: flex; align-items: center; justify-content: center;
   }
+  .flow li + li { margin-top: 22px; }
+  .flow li + li::after { content: '↓'; position: absolute; top: -21px; left: 18px; color: var(--muted); font-size: 14px; }
+  .flow li.flow-end { background: var(--success-bg); border-color: rgba(21,128,61,0.35); }
+  .flow li.flow-end::before { content: '✓'; background: var(--success); }
+  .flow-start { text-align: center; font-family: var(--mono); font-size: 12px; letter-spacing: 1.5px; color: var(--danger); background: var(--danger-bg); border: 2px solid rgba(220,38,38,0.4); border-radius: 10px; padding: 8px; margin-bottom: 22px; position: relative; }
+  .flow-start::after { content: '↓'; position: absolute; bottom: -21px; left: 18px; color: var(--muted); font-size: 14px; }
+  .mgmt { padding: 10px 14px; border-radius: 8px; font-size: 14px; line-height: 1.6; margin-bottom: 10px; border-left: 3px solid; }
+  .gloss-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px 18px; font-size: 13.5px; }
+  .gloss-list dt { font-family: var(--mono); font-weight: 500; color: var(--accent); margin-top: 6px; }
+  .gloss-list dd { color: var(--muted); }
+  .gloss-list div { break-inside: avoid; }
 
-  .scenario-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
+  /* GLOSSARY TERMS */
+  abbr.term { text-decoration: underline dotted rgba(29,111,164,0.7); text-underline-offset: 3px; cursor: help; }
+  #gloss-pop {
+    position: absolute; z-index: 200; max-width: 280px; background: #0f172a; color: #f8fafc;
+    font-size: 13px; line-height: 1.5; padding: 10px 12px; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.25);
   }
+  #gloss-pop strong { color: #7dd3fc; font-family: var(--mono); }
 
-  .back-btn {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    padding: 8px 16px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--muted);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .back-btn { color: var(--muted); border-color: var(--border); background: var(--surface); }
-  .back-btn:hover { color: var(--text); border-color: var(--accent); }
-
-  /* QUIZ */
-  .quiz-question {
-    font-size: 15px;
-    line-height: 1.6;
-    margin-bottom: 18px;
-    padding: 18px;
-    background: #eff6ff;
-    border-radius: 10px;
-    border-left: 3px solid var(--accent);
-    color: var(--text);
-  }
-
-  .quiz-options {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-
-  .quiz-option {
-    padding: 13px 18px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--surface);
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.2s;
-    text-align: left;
-    color: var(--text);
-  }
-
-  .quiz-option:hover { border-color: var(--accent); background: #eff6ff; }
-  .quiz-option.correct { border-color: var(--success); background: #f0fdf4; color: var(--success); }
-  .quiz-option.wrong { border-color: var(--danger); background: #fef2f2; color: var(--danger); }
-
-  .feedback-box {
-    padding: 16px;
-    border-radius: 10px;
-    font-size: 14px;
-    line-height: 1.6;
-    display: none;
-    margin-top: 4px;
-  }
-
-  .feedback-box.correct-fb { background: #f0fdf4; border: 1px solid rgba(21,128,61,0.3); color: #14532d; display: block; }
-  .feedback-box.wrong-fb { background: #fef2f2; border: 1px solid rgba(185,28,28,0.3); color: #7f1d1d; display: block; }
-
-  .next-btn {
-    margin-top: 14px;
-    padding: 11px 24px;
-    border-radius: 8px;
-    border: none;
-    background: var(--accent);
-    color: #ffffff;
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 1px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s;
-  }
-
-  .next-btn:hover { background: #155e82; }
-  .next-btn:disabled { background: var(--dim); color: var(--muted); cursor: not-allowed; }
-
-  /* TWO COL */
-  .two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-
-  /* ===== MOBILE RESPONSIVE ===== */
-  @media (max-width: 700px) {
-    /* Global overflow guard */
-    html, body { overflow-x: hidden; max-width: 100vw; }
-
-    /* Layout */
-    .two-col { grid-template-columns: 1fr; }
-    .main { padding: 14px 12px; padding-top: var(--top-bar-h, 110px); }
-
-    /* Header — compact on mobile */
+  /* MOBILE */
+  @media (max-width: 760px) {
+    .two-col, .fig-pair { grid-template-columns: 1fr; }
+    .main { padding: 16px 12px 40px; }
     header { padding: 10px 12px; }
     .logo-text { font-size: 15px; }
     .logo-sub { font-size: 9px; letter-spacing: 1px; }
     .logo-icon { width: 34px; height: 34px; font-size: 16px; }
     .badge { font-size: 10px; padding: 4px 8px; }
-
-    /* Section titles */
-    .section-title { font-size: 20px; }
-    .section-sub { font-size: 13px; margin-bottom: 18px; }
-
-    /* Cards */
-    .card { padding: 14px 12px; }
-    .card-title { font-size: 14px; }
-
-    /* Checklist — bigger tap targets */
-    .check-item { padding: 12px 12px; min-height: 52px; }
-    .check-box { width: 26px; height: 26px; flex-shrink: 0; }
-    .check-text { font-size: 14px; }
-
-    /* Machine controls — prevent overflow */
-    .machine-visual { padding: 14px 10px; }
-    .machine-body { padding: 12px; max-width: 100%; width: 100%; }
-    .machine-label { font-size: 16px; letter-spacing: 1px; }
-    .machine-sublabel { font-size: 9px; }
-    .control-row { grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
-    .display-panel { grid-template-columns: 1fr 1fr; gap: 6px; padding: 10px; }
-    .display-value .val { font-size: 20px; }
-    .display-value .label { font-size: 9px; }
-    .knob-group { padding: 8px 6px; }
-    .knob-label { font-size: 9px; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .section-title { font-size: 21px; }
+    .section-sub { font-size: 14px; margin-bottom: 16px; }
+    .card { padding: 16px 14px; }
+    .check-item { min-height: 52px; }
+    .check-box { width: 26px; height: 26px; }
+    .machine-visual { padding: 10px; }
+    .machine-body { padding: 14px 10px; }
+    .machine-label { font-size: 17px; letter-spacing: 1px; }
+    .control-grid { gap: 8px; }
+    .knob-group { padding: 10px 6px; }
     .knob-controls { gap: 6px; }
-    /* Bigger knob buttons — 44px touch target */
-    .knob-btn { width: 40px; height: 40px; font-size: 20px; }
-    .knob-val { font-size: 18px; min-width: 36px; }
-    /* Machine action buttons */
-    .machine-btn { padding: 13px 14px; font-size: 12px; min-height: 48px; }
-    .machine-btn-row { gap: 8px; flex-wrap: wrap; justify-content: stretch; }
-    .machine-btn-row .machine-btn { flex: 1; text-align: center; min-width: 0; }
-
-    /* TcCO2 */
-    .tcco2-value { font-size: 42px; }
-    .tcco2-panel { padding: 14px 10px; }
-
-    /* Orientation cards */
-    .orient-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-    .orient-card { padding: 12px 8px; }
-    .orient-icon { font-size: 26px; }
-    .orient-title { font-size: 13px; }
-    .orient-sub { font-size: 11px; }
-
-    /* Scenario cards — full width on small screens */
+    .knob-val { font-size: 20px; min-width: 40px; }
+    .machine-btn-row .machine-btn { flex: 1 1 40%; }
+    .monitor-grid { grid-template-columns: 1fr 1fr; }
+    .mon-tcco2 { grid-column: 1 / -1; }
     .scenario-grid { grid-template-columns: 1fr; gap: 12px; }
-    .scenario-card { padding: 16px; }
-
-    /* Quiz options — bigger tap targets */
-    .quiz-option { padding: 15px 12px; font-size: 14px; min-height: 52px; }
-    .quiz-question { font-size: 14px; padding: 14px; }
-    .next-btn { padding: 14px 22px; font-size: 13px; min-height: 48px; width: 100%; }
-
-    /* Tables — horizontal scroll within card */
-    table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
-    th, td { min-width: 80px; }
-
-    /* Equipment grid */
-    .card [style*="grid-template-columns:repeat"] {
-      grid-template-columns: 1fr 1fr !important;
-    }
-
-    /* Info pill — wrap text */
-    .info-pill { font-size: 12px; padding: 10px 12px; display: flex; }
-
-    /* Back button */
-    .back-btn { padding: 12px 14px; min-height: 44px; font-size: 12px; }
-
-    /* Score display */
-    .score-num { font-size: 56px; }
-    .score-display { padding: 24px 16px; }
-
-    /* Scenario header — stack on very narrow */
-    .scenario-header { flex-wrap: wrap; gap: 10px; }
-
-    /* Figures / SVG diagrams — scale down */
-    figure { padding: 12px 8px 8px; overflow-x: auto; }
-    figure svg { max-width: 100%; }
+    .quiz-option { min-height: 52px; }
+    .btn { min-height: 46px; }
+    table { display: block; overflow-x: auto; }
+    .score-num { font-size: 52px; }
   }
-
   @media (max-width: 400px) {
     .orient-grid { grid-template-columns: 1fr; }
-    .machine-btn-row { flex-direction: column; align-items: stretch; }
-    .control-row { gap: 6px; }
-    .knob-val { font-size: 16px; min-width: 30px; }
   }
 
-  /* ORIENTATION SELECTOR */
-  .orient-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 20px;
-  }
-
-  .orient-card {
-    background: var(--surface2);
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: center;
-  }
-
-  .orient-card:hover { border-color: var(--accent); background: #eff6ff; }
-  .orient-card.selected { border-color: var(--accent); background: #eff6ff; }
-
-  .orient-icon { font-size: 36px; margin-bottom: 10px; }
-  .orient-title { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; margin-bottom: 6px; }
-  .orient-sub { font-size: 12px; color: var(--muted); }
-
-  /* TUBE COMPONENTS */
-  .tube-assembly {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .component {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 12px 16px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: var(--surface2);
-    cursor: grab;
-    transition: all 0.2s;
-    user-select: none;
-  }
-
-  .component:hover { border-color: var(--accent); transform: translateX(4px); }
-  .component.placed { opacity: 0.4; cursor: default; transform: none; }
-
-  .component-icon { font-size: 22px; }
-  .component-name { font-size: 13px; font-weight: 500; }
-  .component-desc { font-size: 12px; color: var(--muted); }
-
-  .drop-zone {
-    min-height: 60px;
-    border: 2px dashed var(--dim);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--muted);
-    font-size: 13px;
-    font-family: 'DM Mono', monospace;
-    transition: all 0.2s;
-    padding: 12px;
-  }
-
-  .drop-zone.has-item {
-    border-style: solid;
-    border-color: var(--success);
-    background: rgba(34,197,94,0.05);
-    justify-content: flex-start;
-    padding: 12px 16px;
-    color: var(--text);
-    gap: 12px;
-  }
-
-  /* SECTION TITLE */
-  .section-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 26px;
-    font-weight: 800;
-    margin-bottom: 6px;
-    color: #0f172a;
-  }
-
-  .section-sub {
-    font-size: 14px;
-    color: #374151;
-    margin-bottom: 28px;
-  }
-
-  /* INFO PILL */
-  .info-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: #fffbeb;
-    border: 1px solid rgba(217,119,6,0.35);
-    border-radius: 8px;
-    padding: 10px 16px;
-    font-size: 13px;
-    color: var(--warn);
-    margin-bottom: 20px;
-  }
-
-  /* STEP INDICATOR */
-  .step-indicator {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-  }
-
-  .step-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--dim);
-    transition: all 0.3s;
-  }
-
-  .step-dot.active { background: var(--accent); transform: scale(1.4); }
-  .step-dot.done { background: var(--success); }
-
-  /* SCORE DISPLAY */
-  .score-display {
-    text-align: center;
-    padding: 32px;
-    background: var(--surface2);
-    border-radius: 14px;
-    border: 1px solid var(--border);
-  }
-
-  .score-num {
-    font-family: 'DM Mono', monospace;
-    font-size: 72px;
-    color: var(--accent);
-    line-height: 1;
-    margin-bottom: 8px;
-  }
-
-  .score-label {
-    font-family: 'Syne', sans-serif;
-    font-size: 18px;
-    color: var(--muted);
-  }
-
-  /* TABLE */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-  }
-
-  th {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
-    color: var(--muted);
-    text-align: left;
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  td {
-    padding: 12px 14px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: top;
-    line-height: 1.5;
-  }
-
-  tr:hover td { background: rgba(255,255,255,0.02); }
-
-  .val-accent { color: var(--accent); font-family: 'DM Mono', monospace; font-weight: 500; }
-  .val-range { color: var(--muted); font-size: 12px; }
-
-  hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
-
-  /* DIAGRAMS */
-  figure {
-    margin: 0 0 20px 0;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px 20px 12px;
-  }
-  figure svg {
-    display: block;
-    max-width: 100%;
-    height: auto;
-    margin: 0 auto;
-  }
-  figcaption {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--dim);
-    text-align: center;
-    margin-top: 10px;
-    letter-spacing: 0.5px;
+  /* PRINT: only the active tab, no chrome */
+  @media print {
+    header, .nav, .no-print, #gloss-pop { display: none !important; }
+    .section { display: none !important; }
+    .section.active { display: block !important; }
+    .main { padding: 0; max-width: none; }
+    .card, figure { box-shadow: none; break-inside: avoid; }
+    .two-col { grid-template-columns: 1fr 1fr; }
+    abbr.term { text-decoration: none; }
   }
 </style>
 </head>
 <body>
 
-<div class="top-bar">
 <header>
   <div class="logo">
-    <div class="logo-icon">🫁</div>
+    <div class="logo-icon" aria-hidden="true">🫁</div>
     <div>
       <div class="logo-text">HFJV Simulator</div>
       <div class="logo-sub">Monsoon III — IR Protocol</div>
     </div>
   </div>
-  <div class="badge">SIM MODE</div>
+  <div class="badge">TRAINING</div>
 </header>
 
-<div class="nav">
-  <button class="nav-tab active" onclick="showSection('overview')">Overview</button>
-  <button class="nav-tab" onclick="showSection('setup')">Setup Checklist</button>
-  <button class="nav-tab" onclick="showSection('machine')">Machine Controls</button>
-  <button class="nav-tab" onclick="showSection('scenarios')">Scenarios</button>
-  <button class="nav-tab" onclick="showSection('reference')">Quick Reference</button>
-</div>
-</div><!-- /.top-bar -->
+<nav class="nav" role="tablist" aria-label="Sections">
+  <button class="nav-tab" role="tab" data-section="overview">Overview</button>
+  <button class="nav-tab" role="tab" data-section="setup">Setup</button>
+  <button class="nav-tab" role="tab" data-section="simulator">Simulator</button>
+  <button class="nav-tab" role="tab" data-section="scenarios">Scenarios</button>
+  <button class="nav-tab" role="tab" data-section="reference">Quick Reference</button>
+</nav>
 
 <!-- ===== OVERVIEW ===== -->
-<div id="overview" class="section active main">
-  <div class="section-title">High-Frequency Jet Ventilation</div>
-  <div class="section-sub">Monsoon III Jet Ventilator — IR Procedure Protocol Simulation</div>
+<section id="overview" class="section main" role="tabpanel">
+  <h1 class="section-title">High-Frequency Jet Ventilation</h1>
+  <p class="section-sub">Everything you need for a jet case in IR, in the order you'll need it. Tap any <abbr class="term" data-term="TcCO₂" tabindex="0">dotted term</abbr> for a definition.</p>
 
-  <div class="info-pill">⚠️ This is a training simulation only. Always follow your institution's live protocol.</div>
+  <div class="info-pill">⚠️ Training simulation only. Always follow your institution's live protocol.</div>
+
+  <div class="golden golden-rule"></div>
+
+  <div class="card">
+    <h2 class="card-title"><span class="icon icon-blue">💡</span> HFJV in 30 seconds</h2>
+    <ul class="bullets" style="margin-bottom:16px;">
+      <li><strong>Tiny breaths, very fast:</strong> about 150 small pulses a minute instead of ~12 big breaths.</li>
+      <li><strong>The target barely moves:</strong> lungs, diaphragm and liver stay nearly still, so IR can place needles <strong>without breath holds</strong>.</li>
+      <li><strong>Why it matters:</strong> more accurate ablations and less radiation time.</li>
+      <li><strong>CO₂ is watched through the skin</strong> (TcCO₂), because ETCO₂ isn't reliable on the jet.</li>
+    </ul>
+    <div class="fig-pair">
+      <figure class="photo">
+        <img src="assets/how-it-works.jpg" alt="Two side profiles of a patient. Left: large arrows show the chest, diaphragm and liver moving with conventional breaths. Right: many tiny airflow arrows in the airways while the liver stays still and a needle targets it." width="1376" height="768">
+        <figcaption>Conventional breaths (left) move the liver. Jet pulses (right) keep it still for the needle.</figcaption>
+      </figure>
+      <figure>
+        <svg id="wave-svg" viewBox="0 0 320 210" role="img" aria-label="Airway pressure over 10 seconds. Conventional ventilation shows two large breaths. Jet ventilation shows 25 tiny rapid pulses."></svg>
+        <figcaption>The same 10 seconds, drawn to the same scale.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="card-title"><span class="icon icon-orange">🧭</span> A jet case at a glance</h2>
+    <ol class="timeline">
+      <li><div class="tl-phase">6:30 AM</div><div class="tl-what">Text the IR anesthesia tech · confirm orientation · 2 PIVs</div></li>
+      <li><div class="tl-phase">Prep</div><div class="tl-what">8.0 ETT + swivel adapter assembly (then set the adapter aside)</div></li>
+      <li><div class="tl-phase">Induce</div><div class="tl-what">Intubate · TIVA</div></li>
+      <li><div class="tl-phase">On the table</div><div class="tl-what">Attach TcCO₂ probe right away (2–10 min to calibrate) · note TcCO₂–ETCO₂ gap</div></li>
+      <li><div class="tl-phase">Connect</div><div class="tl-what">Swivel adapter on · anesthesia machine to Manual, APL open, O₂ 1 LPM, vaporizer off</div></li>
+      <li><div class="tl-phase">Start jet</div><div class="tl-what">Head to scanner: after the gantry is in · Feet to scanner: right away</div></li>
+      <li><div class="tl-phase">Stabilize</div><div class="tl-what">Adjust DP until TcCO₂ is stable</div></li>
+      <li class="lock"><div class="tl-phase">🔒 Initial scan</div><div class="tl-what"><strong>Settings locked from here.</strong> Changes only after Faculty discussion.</div></li>
+      <li><div class="tl-phase">Ablation</div><div class="tl-what">Every 15 min: document TcCO₂, check TOF</div></li>
+      <li><div class="tl-phase">End</div><div class="tl-what">Conventional vent · normalize ETCO₂ · 1–2 recruitment maneuvers · dock sensor · call tech</div></li>
+    </ol>
+    <div class="row" style="margin-top:14px;">
+      <button class="btn" data-go="setup">Start the setup checklist →</button>
+      <button class="btn btn-ghost" data-go="simulator">Try the simulator</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="card-title"><span class="icon icon-green">🗺️</span> Patient orientation decides the setup</h2>
+    <figure class="photo">
+      <img src="assets/room-layout.jpg" alt="Top-down CT room. Left: head to scanner, with the jet ventilator cart behind the gantry and the TcCO2 monitor at the feet. Right: feet to scanner, with the jet cart in front of the gantry opposite the IR physician and the TcCO2 monitor at the head." width="1376" height="768">
+      <figcaption><strong>Left:</strong> head to scanner. <strong>Right:</strong> feet to scanner. Tap one below for details.</figcaption>
+    </figure>
+    <div class="orient-grid">
+      <button class="orient-card" data-orient="head" aria-pressed="false">
+        <div class="orient-icon">🧠</div>
+        <div class="orient-title">Head to Scanner</div>
+        <div class="orient-sub">Liver / lung ablation</div>
+      </button>
+      <button class="orient-card" data-orient="feet" aria-pressed="false">
+        <div class="orient-icon">🦶</div>
+        <div class="orient-title">Feet to Scanner</div>
+        <div class="orient-sub">Renal / some livers</div>
+      </button>
+    </div>
+    <div id="orient-note" class="orient-note" aria-live="polite"></div>
+  </div>
 
   <div class="two-col">
     <div class="card">
-      <div class="card-title"><div class="icon icon-blue">💡</div> What is HFJV?</div>
-      <p style="font-size:14px;line-height:1.7;color:#1e293b;">High-frequency jet ventilation delivers small tidal volumes at 150 cycles/min. In IR procedures, it minimizes target organ movement <strong>without requiring breath holds</strong>, improving accuracy and reducing radiation time during ablations.</p>
+      <h2 class="card-title"><span class="icon icon-yellow">📋</span> Equipment</h2>
+      <div class="equip-grid">
+        <div>🔵 Monsoon III Jet Ventilator</div>
+        <div>🔵 Blue-tip jet connecting tube</div>
+        <div>🔴 Red-tip airway pressure sensing tube</div>
+        <div>💧 IV humidifier drop set</div>
+        <div>🌀 Jet swivel adapter</div>
+        <div>📡 Sentec TcCO₂ monitor</div>
+        <div>🫁 8.0 ETT (minimum)</div>
+        <div>🧠 BIS monitor</div>
+      </div>
     </div>
     <div class="card">
-      <div class="card-title"><div class="icon icon-red">🚫</div> Relative Contraindications</div>
-      <ul style="font-size:14px;line-height:2;color:#1e293b;padding-left:20px;">
+      <h2 class="card-title"><span class="icon icon-red">🚫</span> Relative contraindications</h2>
+      <ul class="bullets">
         <li>Tracheal stenosis</li>
         <li>Pulmonary hypertension</li>
         <li>Pulmonary fibrosis</li>
@@ -1028,173 +546,38 @@
       </ul>
     </div>
   </div>
+</section>
 
-  <div class="card">
-    <div class="card-title"><div class="icon icon-yellow">📋</div> Equipment Required</div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;">
-      <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:13px;">🔵 Monsoon III Jet Ventilator</div>
-      <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:13px;">🔵 Blue-tip jet connecting tube</div>
-      <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:13px;">🔴 Red-tip airway pressure sensing tube</div>
-      <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:13px;">💧 IV Humidifier Drop Set</div>
-      <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:13px;">🌀 Jet Swivel Adapter</div>
-      <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:13px;">📡 Sentec TcCO₂ Monitor</div>
-      <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:13px;">🫁 8.0 ETT (minimum)</div>
-      <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:13px;">🧠 BIS Monitor</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title"><div class="icon icon-green">🗺️</div> Patient Orientation Determines Setup</div>
-
-    <div class="orient-grid">
-      <div class="orient-card" id="orient-head" onclick="selectOrient('head')">
-        <div class="orient-icon">🧠</div>
-        <div class="orient-title">Head to Scanner</div>
-        <div class="orient-sub">Liver / Lung Ablation<br>Jet behind gantry<br>TcCO₂ at feet</div>
-        <div style="margin-top:10px;font-family:'DM Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:1px;">TAP FOR DETAILS ↓</div>
-      </div>
-      <div class="orient-card" id="orient-feet" onclick="selectOrient('feet')">
-        <div class="orient-icon">🦶</div>
-        <div class="orient-title">Feet to Scanner</div>
-        <div class="orient-sub">Renal / Some Livers<br>Jet in front of gantry<br>TcCO₂ at head</div>
-        <div style="margin-top:10px;font-family:'DM Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:1px;">TAP FOR DETAILS ↓</div>
-      </div>
-    </div>
-    <div id="orient-note" style="display:none;padding:14px;background:var(--surface2);border-radius:10px;font-size:13px;line-height:1.7;border-left:3px solid var(--accent);"></div>
-  </div>
-
-  <div style="display:flex;gap:12px;flex-wrap:wrap;">
-    <button class="next-btn" onclick="showSection('setup')">Start Setup Checklist →</button>
-  </div>
-</div>
-
-<!-- ===== SETUP CHECKLIST ===== -->
-<div id="setup" class="section main">
-  <div class="section-title">Setup Checklist</div>
-  <div class="section-sub">Complete all steps before initiating jet ventilation</div>
+<!-- ===== SETUP ===== -->
+<section id="setup" class="section main" role="tabpanel">
+  <h1 class="section-title">Setup Checklist</h1>
+  <p class="section-sub">One phase at a time. Your ticks are saved on this device.</p>
 
   <div class="progress-wrap">
-    <div class="progress-label">
-      <span>SETUP PROGRESS</span>
-      <span id="progress-text">0 / 14</span>
-    </div>
+    <div class="progress-label"><span>SETUP PROGRESS</span><span id="progress-text">0 / 0</span></div>
     <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
   </div>
 
-  <div class="card">
-    <div class="card-title"><div class="icon icon-blue">📞</div> Pre-Room (6:30 AM)</div>
-    <ul class="checklist" id="cl-pre">
-      <li class="check-item" onclick="toggleCheck(this,'pre')">
-        <div class="check-box"></div>
-        <div class="check-text">Text IR Anesthesia Tech (Amy / Jerry) to set up Monsoon Jet and TcCO₂ monitor
-          <div class="check-sub">Send at 6:30 AM</div>
-        </div>
-      </li>
-      <li class="check-item" onclick="toggleCheck(this,'pre')">
-        <div class="check-box"></div>
-        <div class="check-text">Confirm patient orientation with IR team (head or feet to scanner)
-          <div class="check-sub">Determines jet placement and TcCO₂ position</div>
-        </div>
-      </li>
-      <li class="check-item" onclick="toggleCheck(this,'pre')">
-        <div class="check-box"></div>
-        <div class="check-text">Verify 2 PIVs — one for our use, one for IR contrast
-          <div class="check-sub">20g or larger, above wrist preferred</div>
-        </div>
-      </li>
-    </ul>
+  <div class="stepper no-print" id="stepper" aria-label="Setup phases"></div>
+  <div id="setup-phases"></div>
+
+  <div id="setup-complete" class="card complete-banner" hidden>
+    <div style="font-size:44px;margin-bottom:8px;">✅</div>
+    <h2 class="section-title" style="font-size:22px;">Setup complete</h2>
+    <p style="color:var(--muted);margin-bottom:16px;">Every item is confirmed. Practice the case in the simulator next.</p>
+    <button class="btn" data-go="simulator">Go to the simulator →</button>
   </div>
 
-  <div class="card">
-    <div class="card-title"><div class="icon icon-orange">🛠️</div> ETT &amp; Adapter Prep</div>
-
-    <ul class="checklist" id="cl-ett">
-      <li class="check-item" onclick="toggleCheck(this,'ett')">
-        <div class="check-box"></div>
-        <div class="check-text">Select 8.0 ETT (minimum)
-          <div class="check-sub">Larger ETT required for adequate jet delivery</div>
-        </div>
-      </li>
-      <li class="check-item" onclick="toggleCheck(this,'ett')">
-        <div class="check-box"></div>
-        <div class="check-text">Attach swivel adapter/catheter assembly to ETT
-          <div class="check-sub">Adjust pressure monitor line tip 1–2 cm proximal to Murphy eye</div>
-        </div>
-      </li>
-      <li class="check-item" onclick="toggleCheck(this,'ett')">
-        <div class="check-box"></div>
-        <div class="check-text">Apply tape in "flag" formation at swivel adapter to secure position</div>
-      </li>
-      <li class="check-item" onclick="toggleCheck(this,'ett')">
-        <div class="check-box"></div>
-        <div class="check-text">Remove swivel adapter assembly and set aside until post-intubation
-          <div class="check-sub">Do not attach until after patient is intubated</div>
-        </div>
-      </li>
-    </ul>
+  <div class="row no-print" style="justify-content:space-between;margin-top:8px;">
+    <button class="link-btn" id="toggle-all">Show all phases</button>
+    <button class="link-btn" id="clear-checks">Clear all ticks</button>
   </div>
+</section>
 
-  <div class="card">
-    <div class="card-title"><div class="icon icon-green">📡</div> TcCO₂ Monitor Setup</div>
-
-    <ul class="checklist" id="cl-tcco2">
-      <li class="check-item" onclick="toggleCheck(this,'tcco2')">
-        <div class="check-box"></div>
-        <div class="check-text">Place Sentec monitor at foot of bed (visible from control room)</div>
-      </li>
-      <li class="check-item" onclick="toggleCheck(this,'tcco2')">
-        <div class="check-box"></div>
-        <div class="check-text">Attach TcCO₂ probe immediately after moving patient to procedure table
-          <div class="check-sub">Needs 2–10 min to calibrate. Remove both adhesive covers. Apply contact gel drops (1–2 drops).</div>
-        </div>
-      </li>
-      <li class="check-item" onclick="toggleCheck(this,'tcco2')">
-        <div class="check-box"></div>
-        <div class="check-text">Note baseline difference between TcCO₂ and ETCO₂ before initiating jet</div>
-      </li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="card-title"><div class="icon icon-yellow">⚙️</div> Jet Ventilator Initial Settings</div>
-    <ul class="checklist" id="cl-jet">
-      <li class="check-item" onclick="toggleCheck(this,'jet')">
-        <div class="check-box"></div>
-        <div class="check-text">F (Frequency): 150 cpm
-          <div class="check-sub">Do not adjust after setting</div>
-        </div>
-      </li>
-      <li class="check-item" onclick="toggleCheck(this,'jet')">
-        <div class="check-box"></div>
-        <div class="check-text">DP (Driving Pressure): 18 psi — range 10–30 (↑ for high BMI)
-          <div class="check-sub">Primary adjustment knob for CO₂ management</div>
-        </div>
-      </li>
-      <li class="check-item" onclick="toggleCheck(this,'jet')">
-        <div class="check-box"></div>
-        <div class="check-text">IT (Inspiratory Time): 35% — range 30–45%</div>
-      </li>
-      <li class="check-item" onclick="toggleCheck(this,'jet')">
-        <div class="check-box"></div>
-        <div class="check-text">FiO₂: 50% | Climatization: 3 or 4 | PP Alarm: 24 | PIP Alarm: 28</div>
-      </li>
-    </ul>
-  </div>
-
-  <div id="setup-complete" style="display:none;" class="card">
-    <div style="text-align:center;padding:20px;">
-      <div style="font-size:48px;margin-bottom:12px;">✅</div>
-      <div class="section-title" style="margin-bottom:8px;">Setup Complete</div>
-      <p style="color:var(--muted);margin-bottom:20px;">All checklist items confirmed. Proceed to machine controls.</p>
-      <button class="next-btn" onclick="showSection('machine')">Go to Machine Controls →</button>
-    </div>
-  </div>
-</div>
-
-<!-- ===== MACHINE CONTROLS ===== -->
-<div id="machine" class="section main">
-  <div class="section-title">Machine Controls</div>
-  <div class="section-sub">Simulated Monsoon III Jet Ventilator — adjust settings and observe TcCO₂ response</div>
+<!-- ===== SIMULATOR ===== -->
+<section id="simulator" class="section main" role="tabpanel">
+  <h1 class="section-title">Simulator</h1>
+  <p class="section-sub">Start the jet, stabilize TcCO₂, take the initial scan, then handle what the case throws at you. 1 second here = 30 seconds in the case.</p>
 
   <div class="two-col">
     <div>
@@ -1202,703 +585,1162 @@
         <div class="machine-body">
           <div class="machine-label">MONSOON III</div>
           <div class="machine-sublabel">JET VENTILATOR — ACUTRONIC</div>
-
-          <div class="display-panel">
-            <div class="display-value">
-              <div class="label">FREQ</div>
-              <div class="val" id="disp-f">150</div>
-              <div class="unit">cpm</div>
-            </div>
-            <div class="display-value">
-              <div class="label">DRIVE PRES</div>
-              <div class="val" id="disp-dp">18</div>
-              <div class="unit">psi</div>
-            </div>
-            <div class="display-value">
-              <div class="label">INSP TIME</div>
-              <div class="val" id="disp-it">35</div>
-              <div class="unit">%</div>
-            </div>
-            <div class="display-value">
-              <div class="label">FiO₂</div>
-              <div class="val" id="disp-fio2">50</div>
-              <div class="unit">%</div>
-            </div>
+          <div class="control-grid" id="knobs"></div>
+          <div class="motion-meter"><span>Target movement</span><span class="motion-bars" id="motion-bars"><span></span><span></span><span></span></span><span id="motion-text">Minimal</span></div>
+          <div id="freq-warn" class="hint warn" hidden style="margin:0 0 12px;">
+            <span class="hint-icon">⚠️</span>
+            <span>Don't change the frequency. 150 cpm is the US FDA limit, and a lower rate means bigger breaths and <strong>more target movement</strong>. Use DP instead.</span>
           </div>
-
-          <div class="control-row">
-            <div class="knob-group">
-              <div class="knob-label">DRIVE PRES (PSI)</div>
-              <div class="knob-controls">
-                <button class="knob-btn" onclick="adjustVal('dp',-1)">−</button>
-                <div class="knob-val" id="knob-dp">18</div>
-                <button class="knob-btn" onclick="adjustVal('dp',1)">+</button>
-              </div>
-              <div style="font-size:11px;color:var(--muted);margin-top:6px;">Range: 10–30</div>
-            </div>
-            <div class="knob-group">
-              <div class="knob-label">INSP TIME (%)</div>
-              <div class="knob-controls">
-                <button class="knob-btn" onclick="adjustVal('it',-5)">−</button>
-                <div class="knob-val" id="knob-it">35</div>
-                <button class="knob-btn" onclick="adjustVal('it',5)">+</button>
-              </div>
-              <div style="font-size:11px;color:var(--muted);margin-top:6px;">Range: 30–45</div>
-            </div>
-          </div>
-
-          <div class="control-row">
-            <div class="knob-group">
-              <div class="knob-label">FiO₂ (%)</div>
-              <div class="knob-controls">
-                <button class="knob-btn" onclick="adjustVal('fio2',-5)">−</button>
-                <div class="knob-val" id="knob-fio2">50</div>
-                <button class="knob-btn" onclick="adjustVal('fio2',5)">+</button>
-              </div>
-              <div style="font-size:11px;color:var(--muted);margin-top:6px;">Range: 21–100</div>
-            </div>
-            <div class="knob-group">
-              <div class="knob-label">FREQ (CPM)</div>
-              <div class="knob-controls">
-                <button class="knob-btn" onclick="adjustVal('freq',-10)" style="font-size:12px;">−</button>
-                <div class="knob-val" id="knob-freq">150</div>
-                <button class="knob-btn" onclick="adjustVal('freq',10)" style="font-size:12px;">+</button>
-              </div>
-              <div style="font-size:11px;color:var(--muted);margin-top:6px;">Do not adjust</div>
-            </div>
-          </div>
-
-          <div id="freq-warn" style="display:none;background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.4);border-radius:8px;padding:10px 14px;font-size:12px;color:#fbbf24;margin-bottom:12px;line-height:1.5;">
-            ⚠ Frequency adjusted from default. Frequency should <strong>not</strong> be changed — 150 cpm is the FDA limit in the US. Reducing frequency increases target movement and is not recommended. Use DP adjustment instead.
-          </div>
-
           <div class="machine-btn-row">
-            <button class="machine-btn btn-start" id="btn-start" onclick="startJet()">▶ START JET</button>
-            <button class="machine-btn btn-stop" id="btn-stop" onclick="stopJet()" style="display:none;">■ STOP JET</button>
-            <button class="machine-btn btn-reset" onclick="resetMachine()">↺ RESET</button>
+            <button class="machine-btn btn-start" id="btn-start">▶ START JET</button>
+            <button class="machine-btn btn-stop" id="btn-stop" hidden>■ STOP JET</button>
+            <button class="machine-btn btn-scan" id="btn-scan" disabled>📷 INITIAL SCAN</button>
+            <button class="machine-btn btn-reset" id="btn-reset">↺ RESET</button>
           </div>
         </div>
       </div>
 
-      <div class="alarm-box" id="alarm-box">
-        <div class="alarm-title">⚠ ALARM — PP/PIP HIGH</div>
-        <div class="alarm-text" id="alarm-text">Check jet tubing and ETT adapter for kink or obstruction. Verify paralysis. Confirm APL valve is open.</div>
-        <button class="next-btn" style="margin-top:12px;" onclick="silenceAlarm()">Silence Alarm + Reset</button>
+      <div class="alarm-box" id="alarm-box" hidden role="alert">
+        <div class="alarm-title" id="alarm-title">⚠ ALARM — PP/PIP HIGH</div>
+        <div class="alarm-text" id="alarm-text">Work through the checks: tubing → ETT (suction) → paralysis → APL valve → settings. When it's fixed: <strong>Silence</strong>, then <strong>Alarm Reset</strong>.</div>
+        <div class="row">
+          <button class="btn btn-sm" id="btn-silence">🔕 Silence</button>
+          <button class="btn btn-sm" id="btn-alarm-reset" disabled>Alarm Reset</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title"><span class="icon icon-yellow">🩺</span> Bedside checks</h2>
+        <div class="bedside-grid" id="bedside"></div>
+        <ul class="sim-log" id="sim-log" aria-live="polite"></ul>
       </div>
     </div>
 
     <div>
       <div class="card">
-        <div class="card-title"><div class="icon icon-green">📊</div> TcCO₂ Monitor (Sentec)</div>
-        <div class="tcco2-panel">
-          <div class="tcco2-label">TcCO₂ — mmHg</div>
-          <div class="tcco2-value" id="tcco2-val">--</div>
-          <div class="tcco2-status" id="tcco2-status">Waiting for jet start...</div>
+        <h2 class="card-title"><span class="icon icon-green">📊</span> Monitors</h2>
+        <div class="monitor-grid">
+          <div class="mon mon-tcco2" id="mon-tcco2"><div class="mon-label">TcCO₂ mmHg</div><div class="mon-val" id="val-tcco2">--</div><div class="mon-status" id="st-tcco2">Jet off</div></div>
+          <div class="mon" id="mon-spo2"><div class="mon-label">SpO₂ %</div><div class="mon-val" id="val-spo2">--</div><div class="mon-status" id="st-spo2"></div></div>
+          <div class="mon" id="mon-pp"><div class="mon-label">PP cmH₂O</div><div class="mon-val" id="val-pp">--</div><div class="mon-status" id="st-pp">alarm &gt;24</div></div>
         </div>
-        <div style="margin-top:14px;font-size:13px;color:var(--muted);line-height:1.7;">
-          <div>🟢 <strong>Goal:</strong> TcCO₂ stable, fluctuating &lt;30 sec</div>
-          <div style="margin-top:4px;">🟡 <strong>Permissive range:</strong> 25–60 mmHg</div>
-          <div style="margin-top:4px;">📝 Document every <strong>15 minutes</strong> in chart row below ETCO₂</div>
+        <div class="trend">
+          <svg id="trend-svg" viewBox="0 0 320 140" role="img" aria-label="TcCO2 trend over the last 30 minutes"></svg>
+          <div class="trend-caption"><span>TcCO₂, last 30 min · green band = permissive 25–60</span><span id="sim-clock">Case time 0:00</span></div>
         </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title"><div class="icon icon-yellow">💊</div> Paralysis Monitor</div>
-        <div style="font-size:14px;line-height:1.8;padding:14px;background:var(--surface2);border-radius:10px;color:#0f172a;">
-          <div>⏱️ Check twitches every <strong>15 minutes</strong></div>
-          <div>✅ Target: <strong>≤1 out of 4 TOF</strong></div>
-          <div>⚠️ Inadequate paralysis → movement artifact, inadequate ventilation</div>
-          <div>💉 Consider <strong>paralytic infusion</strong> for prolonged cases</div>
+        <div class="hint" id="hint"><span class="hint-icon">▶️</span><span>Press <strong>Start Jet</strong> to begin.</span></div>
+        <div class="check-due" id="check-due" hidden>
+          <span>⏱ <strong>15-minute check:</strong> document TcCO₂ and check TOF.</span>
+          <button class="btn btn-sm" id="btn-check-done">Done</button>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-title"><div class="icon icon-orange">⚙️</div> CO₂ Management</div>
-
-        <figure style="margin-bottom:14px;">
-          <svg viewBox="0 0 500 252" role="img" aria-label="CO2 decision flow: check TcCO2 value every 15 minutes, if high above 60 increase DP 1-2 psi, if low below 25 decrease DP 1-2 psi, if 25-60 acceptable range; post-scan changes require Faculty discussion first">
-            <defs>
-              <marker id="arr3" markerWidth="8" markerHeight="7" refX="6" refY="3.5" orient="auto">
-                <polygon points="0 0, 8 3.5, 0 7" fill="currentColor"/>
-              </marker>
-              <marker id="arr3r" markerWidth="8" markerHeight="7" refX="6" refY="3.5" orient="auto">
-                <polygon points="0 0, 8 3.5, 0 7" fill="#b91c1c"/>
-              </marker>
-              <marker id="arr3g" markerWidth="8" markerHeight="7" refX="6" refY="3.5" orient="auto">
-                <polygon points="0 0, 8 3.5, 0 7" fill="#166534"/>
-              </marker>
-              <marker id="arr3b" markerWidth="8" markerHeight="7" refX="6" refY="3.5" orient="auto">
-                <polygon points="0 0, 8 3.5, 0 7" fill="#1d6fa4"/>
-              </marker>
-            </defs>
-
-            <!-- CHECK TcCO2 box — top center -->
-            <rect x="165" y="12" width="170" height="46" rx="10" fill="#dbeeff" stroke="#1d6fa4" stroke-width="2"/>
-            <text x="250" y="33" text-anchor="middle" font-family="monospace" font-size="13" fill="#1d6fa4" font-weight="700">CHECK TcCO₂</text>
-            <text x="250" y="50" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#374151">every 15 min</text>
-
-            <!-- Arrow down to diamond -->
-            <line x1="250" y1="58" x2="250" y2="88" stroke="currentColor" stroke-width="2" marker-end="url(#arr3)"/>
-
-            <!-- Decision diamond — center -->
-            <polygon points="250,90 310,125 250,160 190,125" fill="#f8fafc" stroke="#334155" stroke-width="2"/>
-            <text x="250" y="120" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0f172a">TcCO₂</text>
-            <text x="250" y="137" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0f172a">value?</text>
-
-            <!-- LEFT: HIGH arrow + box -->
-            <line x1="190" y1="125" x2="112" y2="125" stroke="#b91c1c" stroke-width="2" marker-end="url(#arr3r)"/>
-            <text x="152" y="115" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#b91c1c" font-weight="600">&gt; 60</text>
-            <rect x="12" y="100" width="100" height="50" rx="9" fill="rgba(185,28,28,0.07)" stroke="#b91c1c" stroke-width="2"/>
-            <text x="62" y="121" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#b91c1c" font-weight="700">HIGH</text>
-            <text x="62" y="140" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#b91c1c">↑ DP 1–2 psi</text>
-
-            <!-- RIGHT: LOW arrow + box -->
-            <line x1="310" y1="125" x2="388" y2="125" stroke="#1d6fa4" stroke-width="2" marker-end="url(#arr3b)"/>
-            <text x="348" y="115" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1d6fa4" font-weight="600">&lt; 25</text>
-            <rect x="388" y="100" width="100" height="50" rx="9" fill="rgba(29,111,164,0.07)" stroke="#1d6fa4" stroke-width="2"/>
-            <text x="438" y="121" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1d6fa4" font-weight="700">LOW</text>
-            <text x="438" y="140" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1d6fa4">↓ DP 1–2 psi</text>
-
-            <!-- DOWN: ACCEPTABLE arrow + box -->
-            <line x1="250" y1="160" x2="250" y2="188" stroke="#166534" stroke-width="2" marker-end="url(#arr3g)"/>
-            <text x="264" y="178" text-anchor="start" font-family="sans-serif" font-size="11" fill="#166534" font-weight="600">25–60</text>
-            <rect x="100" y="190" width="300" height="56" rx="10" fill="rgba(21,128,61,0.07)" stroke="#166534" stroke-width="2"/>
-            <text x="250" y="219" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#166534" font-weight="700">ACCEPTABLE RANGE</text>
-            <text x="250" y="236" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#166534">If SpO₂ drops → ↑ FiO₂ first</text>
-          </svg>
-          <figcaption style="color:#b91c1c;">CO₂ MANAGEMENT FLOW — DP is the primary adjustment knob; no changes post-initial scan without Faculty discussion</figcaption>
-        </figure>
-
-        <div id="management-guide" style="font-size:13px;line-height:1.9;color:#0f172a;">
-          <div style="margin-bottom:10px;padding:10px 14px;background:rgba(239,68,68,0.08);border-radius:8px;border-left:3px solid var(--danger);">
-            <strong>High TcCO₂ (hypoventilation)</strong><br>
-            ↑ DP by 1–2 psi · <em>Discuss with Anesthesia &amp; IR Faculty before any change after initial scan</em>
-          </div>
-          <div style="margin-bottom:10px;padding:10px 14px;background:rgba(0,212,255,0.08);border-radius:8px;border-left:3px solid var(--accent);">
-            <strong>Low TcCO₂ (hyperventilation)</strong><br>
-            ↓ DP by 1–2 psi
-          </div>
-          <div style="padding:10px 14px;background:rgba(251,191,36,0.08);border-radius:8px;border-left:3px solid var(--warn);">
-            <strong>Hypoxia</strong><br>
-            ↑ FiO₂ · ↑ IT by 5% · ↑ Vent flow 0.5–1 LPM (creates PEEP) · ↑ DP 2 psi
-          </div>
-        </div>
+        <h2 class="card-title"><span class="icon icon-red">🎲</span> Practice an event</h2>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">Starts the jet if needed. Try it both before and after the initial scan.</p>
+        <div class="event-grid" id="events"></div>
       </div>
     </div>
   </div>
-</div>
+
+  <dialog id="lock-dialog">
+    <h3>🔒 Settings are locked</h3>
+    <p>The initial scan is done. Changing DP, IT or F now needs a discussion with the <strong>Anesthesia and IR Faculty</strong> first. (Raising FiO₂ is always OK.)</p>
+    <div class="row" style="justify-content:flex-end;">
+      <button class="btn btn-ghost" value="cancel" id="lock-cancel">Cancel</button>
+      <button class="btn" value="ok" id="lock-ok">Discussed — make the change</button>
+    </div>
+  </dialog>
+</section>
 
 <!-- ===== SCENARIOS ===== -->
-<div id="scenarios" class="section main">
+<section id="scenarios" class="section main" role="tabpanel">
   <div id="scenario-list">
-    <div class="section-title">Clinical Scenarios</div>
-    <div class="section-sub">Work through real-world decision points for HFJV in IR</div>
-
-    <div class="scenario-grid">
-      <div class="scenario-card" onclick="loadScenario('co2high')">
-        <div class="scenario-tag tag-caution">CO₂ MANAGEMENT</div>
-        <div class="scenario-title">Rising TcCO₂ After Initial Scan</div>
-        <div class="scenario-desc">TcCO₂ climbs from 42 to 58 mmHg. The initial scan is complete. Who do you call first?</div>
-      </div>
-      <div class="scenario-card" onclick="loadScenario('alarm')">
-        <div class="scenario-tag tag-urgent">ALARM</div>
-        <div class="scenario-title">PP/PIP High Alarm Fires</div>
-        <div class="scenario-desc">Mid-case the PIP alarm sounds. SpO₂ is 97%. What is your systematic approach?</div>
-      </div>
-      <div class="scenario-card" onclick="loadScenario('hypoxia')">
-        <div class="scenario-tag tag-urgent">HYPOXIA</div>
-        <div class="scenario-title">SpO₂ Drops to 88%</div>
-        <div class="scenario-desc">Mid-case, SpO₂ drops to 88% on FiO₂ 50%. The initial scan is complete. What can you do?</div>
-      </div>
-
-      <div class="scenario-card" onclick="loadScenario('initiate')">
-        <div class="scenario-tag tag-routine">INITIATION</div>
-        <div class="scenario-title">When Can You Start the Jet?</div>
-        <div class="scenario-desc">Patient is induced, intubated, on TIVA. TcCO₂ is calibrating. When do you initiate jet ventilation?</div>
-      </div>
-      <div class="scenario-card" onclick="loadScenario('end')">
-        <div class="scenario-tag tag-routine">END OF CASE</div>
-        <div class="scenario-title">Transitioning Back to Conventional Vent</div>
-        <div class="scenario-desc">Ablation is complete. IR says jet no longer needed. Walk through your end-of-case steps.</div>
-      </div>
-    </div>
+    <h1 class="section-title">Clinical Scenarios</h1>
+    <p class="section-sub">Short decision drills. Answers are shuffled each time.</p>
+    <div class="scenario-grid" id="scenario-grid"></div>
   </div>
-
-  <div id="scenario-active" class="scenario-active">
+  <div id="scenario-active" hidden>
     <div class="scenario-header">
-      <button class="back-btn" onclick="closeScenario()">← Back to Scenarios</button>
-      <div id="scenario-score-display" style="font-family:'DM Mono',monospace;font-size:13px;color:var(--muted);"></div>
+      <button class="btn btn-ghost btn-sm" id="scenario-back">← All scenarios</button>
+      <div id="scenario-count" style="font-family:var(--mono);font-size:13px;color:var(--muted);"></div>
     </div>
     <div id="scenario-content"></div>
   </div>
-</div>
+</section>
 
 <!-- ===== REFERENCE ===== -->
-<div id="reference" class="section main">
-  <div class="section-title">Quick Reference</div>
-  <div class="section-sub">Key settings and contacts — printable for station use</div>
+<section id="reference" class="section main" role="tabpanel">
+  <div class="row" style="justify-content:space-between;align-items:flex-start;">
+    <div>
+      <h1 class="section-title">Quick Reference</h1>
+      <p class="section-sub">Settings, troubleshooting and contacts. Printable for the station.</p>
+    </div>
+    <button class="btn btn-ghost no-print" id="btn-print">🖨 Print</button>
+  </div>
+
+  <div class="golden golden-rule"></div>
 
   <div class="card">
-    <div class="card-title"><div class="icon icon-blue">⚙️</div> Initial Ventilator Settings</div>
-    <table>
-      <tr><th>PARAMETER</th><th>DEFAULT</th><th>RANGE / NOTE</th></tr>
-      <tr><td>Frequency (F)</td><td class="val-accent">150 cpm</td><td class="val-range">Do NOT adjust routinely</td></tr>
-      <tr><td>Driving Pressure (DP)</td><td class="val-accent">18 psi</td><td class="val-range">10–30 psi · ↑ for high BMI</td></tr>
-      <tr><td>Inspiratory Time (IT)</td><td class="val-accent">35%</td><td class="val-range">30–45%</td></tr>
-      <tr><td>FiO₂</td><td class="val-accent">50%</td><td class="val-range">Titrate to SpO₂</td></tr>
-      <tr><td>Climatization</td><td class="val-accent">3–4</td><td class="val-range">Humidification level</td></tr>
-      <tr><td>PP Alarm</td><td class="val-accent">24</td><td class="val-range"></td></tr>
-      <tr><td>PIP Alarm</td><td class="val-accent">28</td><td class="val-range"></td></tr>
-    </table>
+    <h2 class="card-title"><span class="icon icon-blue">⚙️</span> Initial ventilator settings</h2>
+    <table id="settings-table"></table>
   </div>
 
   <div class="two-col">
     <div class="card">
-      <div class="card-title"><div class="icon icon-orange">🔧</div> Troubleshooting</div>
-      <table>
-        <tr><th>PROBLEM</th><th>ACTION</th></tr>
-        <tr><td>↑ TcCO₂</td><td>↑ DP 1–2 psi<br><span class="val-range">After initial scan: discuss with Faculty first</span></td></tr>
-        <tr><td>↓ TcCO₂</td><td>↓ DP 1–2 psi</td></tr>
-        <tr><td>↓ SpO₂</td><td>↑ FiO₂ · ↑ IT 5% · ↑ Vent flow · ↑ DP 2</td></tr>
-        <tr><td>PP/PIP Alarm</td><td>Check tubing kink · Check paralysis · Open APL · Suction</td></tr>
-      </table>
+      <h2 class="card-title"><span class="icon icon-orange">🌡️</span> CO₂ and oxygen</h2>
+      <figure style="margin-bottom:14px;">
+        <svg viewBox="0 0 500 252" role="img" aria-label="CO2 decision flow: check TcCO2 every 15 minutes. Above 60, increase DP 1 to 2 psi. Below 25, decrease DP 1 to 2 psi. 25 to 60 is acceptable. If SpO2 drops, increase FiO2 first.">
+          <defs>
+            <marker id="arr3" markerWidth="8" markerHeight="7" refX="6" refY="3.5" orient="auto"><polygon points="0 0, 8 3.5, 0 7" fill="#334155"/></marker>
+            <marker id="arr3r" markerWidth="8" markerHeight="7" refX="6" refY="3.5" orient="auto"><polygon points="0 0, 8 3.5, 0 7" fill="#b91c1c"/></marker>
+            <marker id="arr3g" markerWidth="8" markerHeight="7" refX="6" refY="3.5" orient="auto"><polygon points="0 0, 8 3.5, 0 7" fill="#166534"/></marker>
+            <marker id="arr3b" markerWidth="8" markerHeight="7" refX="6" refY="3.5" orient="auto"><polygon points="0 0, 8 3.5, 0 7" fill="#1d6fa4"/></marker>
+          </defs>
+          <rect x="165" y="12" width="170" height="46" rx="10" fill="#dbeeff" stroke="#1d6fa4" stroke-width="2"/>
+          <text x="250" y="33" text-anchor="middle" font-family="monospace" font-size="13" fill="#1d6fa4" font-weight="700">CHECK TcCO₂</text>
+          <text x="250" y="50" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#374151">every 15 min</text>
+          <line x1="250" y1="58" x2="250" y2="88" stroke="#334155" stroke-width="2" marker-end="url(#arr3)"/>
+          <polygon points="250,90 310,125 250,160 190,125" fill="#f8fafc" stroke="#334155" stroke-width="2"/>
+          <text x="250" y="120" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0f172a">TcCO₂</text>
+          <text x="250" y="137" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0f172a">value?</text>
+          <line x1="190" y1="125" x2="112" y2="125" stroke="#b91c1c" stroke-width="2" marker-end="url(#arr3r)"/>
+          <text x="152" y="115" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#b91c1c" font-weight="600">&gt; 60</text>
+          <rect x="12" y="100" width="100" height="50" rx="9" fill="rgba(185,28,28,0.07)" stroke="#b91c1c" stroke-width="2"/>
+          <text x="62" y="121" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#b91c1c" font-weight="700">HIGH</text>
+          <text x="62" y="140" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#b91c1c">↑ DP 1–2 psi</text>
+          <line x1="310" y1="125" x2="388" y2="125" stroke="#1d6fa4" stroke-width="2" marker-end="url(#arr3b)"/>
+          <text x="348" y="115" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1d6fa4" font-weight="600">&lt; 25</text>
+          <rect x="388" y="100" width="100" height="50" rx="9" fill="rgba(29,111,164,0.07)" stroke="#1d6fa4" stroke-width="2"/>
+          <text x="438" y="121" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1d6fa4" font-weight="700">LOW</text>
+          <text x="438" y="140" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1d6fa4">↓ DP 1–2 psi</text>
+          <line x1="250" y1="160" x2="250" y2="188" stroke="#166534" stroke-width="2" marker-end="url(#arr3g)"/>
+          <text x="264" y="178" text-anchor="start" font-family="sans-serif" font-size="11" fill="#166534" font-weight="600">25–60</text>
+          <rect x="100" y="190" width="300" height="56" rx="10" fill="rgba(21,128,61,0.07)" stroke="#166534" stroke-width="2"/>
+          <text x="250" y="219" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#166534" font-weight="700">ACCEPTABLE RANGE</text>
+          <text x="250" y="236" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#166534">If SpO₂ drops → ↑ FiO₂ first</text>
+        </svg>
+        <figcaption>DP is the main CO₂ knob. <strong style="color:var(--danger)">After the initial scan, discuss with Faculty before any DP change.</strong></figcaption>
+      </figure>
+      <div class="mgmt" style="background:var(--warn-bg);border-color:#d97706;">
+        <strong>Low SpO₂</strong><br>
+        1. ↑ FiO₂ (OK at any time)<br>
+        2. Check breath sounds · suction the ETT<br>
+        3. Then, <em>after Faculty discussion if post-scan:</em> ↑ IT 5% · ↑ vent flow 0.5–1 LPM (creates PEEP) · ↑ DP 2 psi
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title"><span class="icon icon-red">🚨</span> PP/PIP alarm</h2>
+      <div class="flow-start">⚠ PP / PIP HIGH ALARM</div>
+      <ol class="flow">
+        <li><strong>Jet tubing:</strong> kinked or blocked?</li>
+        <li><strong>ETT / airway:</strong> secretions? Suction.</li>
+        <li><strong>Paralysis:</strong> TOF ≤1/4? Redose if not.</li>
+        <li><strong>APL valve:</strong> fully open?</li>
+        <li><strong>Settings:</strong> DP / IT appropriate?</li>
+        <li class="flow-end"><strong>Fixed:</strong> Silence, <em>then</em> press <strong>Alarm Reset</strong></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h2 class="card-title"><span class="icon icon-yellow">💊</span> Paralysis</h2>
+      <ul class="bullets">
+        <li>Check twitches every <strong>15 minutes</strong>. Target <strong>≤1 of 4 TOF</strong>.</li>
+        <li>Inadequate paralysis → movement, high pressures, poor ventilation.</li>
+        <li>Consider a <strong>paralytic infusion</strong> for long cases.</li>
+      </ul>
     </div>
     <div class="card">
-      <div class="card-title"><div class="icon icon-green">📱</div> Key Contacts</div>
+      <h2 class="card-title"><span class="icon icon-green">📱</span> Key contacts</h2>
       <table>
         <tr><th>WHO</th><th>CONTACT</th></tr>
-        <tr><td>Sentec Rep<br><span class="val-range">Lauren</span></td><td class="val-accent">816-808-7150</td></tr>
-        <tr><td>Monsoon Rep<br><span class="val-range">Travis Schaszberger</span></td><td class="val-accent">888-730-5463</td></tr>
-        <tr><td>IR Anesthesia Tech<br><span class="val-range">Amy Jimenez / Jerry Trejo</span></td><td>Text 6:30 AM</td></tr>
+        <tr><td>Sentec Rep<br><span class="val-range">Lauren</span></td><td class="val-accent"><a href="tel:8168087150" style="color:inherit;">816-808-7150</a></td></tr>
+        <tr><td>Monsoon Rep<br><span class="val-range">Travis Schaszberger</span></td><td class="val-accent"><a href="tel:8887305463" style="color:inherit;">888-730-5463</a></td></tr>
+        <tr><td>IR Anesthesia Tech<br><span class="val-range">Amy Jimenez / Jerry Trejo</span></td><td>Text at 6:30 AM</td></tr>
       </table>
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-title"><div class="icon icon-yellow">📝</div> Documentation Checklist</div>
-    <ul style="font-size:14px;line-height:2.2;padding-left:20px;">
-      <li>Check <strong>"Jet Ventilator"</strong> under Checklist → Ancillary Equipment</li>
-      <li>Document final jet vent settings in <strong>Quick Note</strong> (F, DP, IT, FiO₂)</li>
-      <li>Document <strong>TcCO₂ every 15 minutes</strong> in row under ETCO₂</li>
-      <li>Record any setting changes in Quick Note with time</li>
-      <li>TOF check documented every 15 min (target ≤1/4)</li>
-    </ul>
+  <div class="two-col">
+    <div class="card">
+      <h2 class="card-title"><span class="icon icon-yellow">📝</span> Documentation</h2>
+      <ul class="bullets">
+        <li>Check <strong>"Jet Ventilator"</strong> under Checklist → Ancillary Equipment</li>
+        <li>Final jet settings (F, DP, IT, FiO₂) in a <strong>Quick Note</strong></li>
+        <li><strong>TcCO₂ every 15 min</strong> in the row under ETCO₂</li>
+        <li>Any setting change in a Quick Note, with the time</li>
+        <li>TOF every 15 min (target ≤1/4)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2 class="card-title"><span class="icon icon-red">🏁</span> End of case</h2>
+      <ol class="bullets">
+        <li>IR confirms the jet is no longer needed</li>
+        <li>Switch to <strong>conventional ventilation</strong> (the swivel adapter can stay)</li>
+        <li>Hyper- or hypoventilate to bring ETCO₂ back to baseline</li>
+        <li><strong>1–2 recruitment maneuvers</strong> for atelectasis</li>
+        <li>Return the TcCO₂ sensor to the Sentec docking compartment</li>
+        <li>Ask the anesthesia tech to remove the equipment</li>
+      </ol>
+    </div>
   </div>
 
   <div class="card">
-    <div class="card-title"><div class="icon icon-red">🏁</div> End of Case Steps</div>
-    <ol style="font-size:14px;line-height:2.2;padding-left:20px;">
-      <li>IR confirms jet no longer needed after ablation complete</li>
-      <li>Switch to <strong>conventional ventilation</strong></li>
-      <li>Hyper- or hypoventilate to normalize ETCO₂ to baseline</li>
-      <li>Perform <strong>1–2 recruitment maneuvers</strong> to treat atelectasis</li>
-      <li>Return TcCO₂ sensor to docking compartment on Sentec monitor</li>
-      <li>Alert anesthesia tech to remove equipment</li>
-    </ol>
+    <h2 class="card-title"><span class="icon icon-blue">📖</span> Glossary</h2>
+    <dl class="gloss-list" id="gloss-list"></dl>
   </div>
-</div>
+</section>
+
+<div id="gloss-pop" role="tooltip" hidden></div>
 
 <script>
-// NAV
+'use strict';
+
+/* ================= SHARED DATA (single source of truth) ================= */
+
+// Jet settings: used by the setup checklist, the simulator and the reference table.
+var SETTINGS = [
+  { key: 'freq', name: 'Frequency (F)',          short: 'FREQ',  def: 150, unit: 'cpm', min: 100, max: 150, step: 10, locks: true,  note: 'Do NOT adjust. 150 cpm is the US FDA limit' },
+  { key: 'dp',   name: 'Driving Pressure (DP)',  short: 'DP',    def: 18,  unit: 'psi', min: 10,  max: 30,  step: 1,  locks: true,  note: '10–30 psi · ↑ for high BMI · main CO₂ knob' },
+  { key: 'it',   name: 'Inspiratory Time (IT)',  short: 'IT',    def: 35,  unit: '%',   min: 30,  max: 45,  step: 5,  locks: true,  note: '30–45%' },
+  { key: 'fio2', name: 'FiO₂',                   short: 'FiO₂',  def: 50,  unit: '%',   min: 21,  max: 100, step: 5,  locks: false, note: 'Titrate to SpO₂' }
+];
+var OTHER_SETTINGS = [
+  ['Climatization', '3–4', 'Humidification level'],
+  ['PP alarm', '24', 'cmH₂O'],
+  ['PIP alarm', '28', 'cmH₂O']
+];
+var PP_ALARM = 24;
+function setting(key) { return SETTINGS.filter(function (s) { return s.key === key; })[0]; }
+
+var GLOSSARY = [
+  ['HFJV', 'High-frequency jet ventilation: small, rapid pulses (150/min) that keep the target organ nearly still.'],
+  ['DP', 'Driving pressure (psi): how hard each jet pulse is pushed. The main knob for CO₂.'],
+  ['IT', 'Inspiratory time: the % of each cycle spent delivering the jet pulse.'],
+  ['PIP', 'Peak inspiratory pressure: the highest airway pressure during a jet pulse (alarm 28).'],
+  ['PP', 'Pause pressure: the airway pressure between jet pulses (alarm 24).'],
+  ['TcCO₂', 'Transcutaneous CO₂: CO₂ measured through the skin by the Sentec probe. Used instead of ETCO₂ during the jet.'],
+  ['ETCO₂', 'End-tidal CO₂: measured from exhaled gas. Not reliable during jet ventilation.'],
+  ['SpO₂', 'Oxygen saturation from pulse oximetry.'],
+  ['FiO₂', 'Fraction of inspired oxygen.'],
+  ['TOF', 'Train-of-four: a nerve-stimulator test of paralysis. Target ≤1 of 4 twitches.'],
+  ['APL', 'Adjustable pressure-limiting ("pop-off") valve on the anesthesia machine. Keep it fully open during the jet.'],
+  ['TIVA', 'Total intravenous anesthesia. No volatile agent, so the vaporizer is off.'],
+  ['BIS', 'Bispectral index: processed EEG to monitor depth of anesthesia (useful with TIVA).'],
+  ['ETT', 'Endotracheal tube. Use an 8.0 or larger for the jet.'],
+  ['PIV', 'Peripheral IV.'],
+  ['PEEP', 'Positive end-expiratory pressure.'],
+  ['Murphy eye', 'The side hole near the tip of the ETT.'],
+  ['gantry', 'The ring ("donut") of the CT scanner.'],
+  ['IR', 'Interventional radiology.'],
+  ['cpm', 'Cycles per minute.'],
+  ['LPM', 'Liters per minute.'],
+  ['psi', 'Pounds per square inch.']
+];
+
+var SETUP = [
+  { title: 'Pre-room', icon: '📞', items: [
+    { id: 'pre-text', t: 'Text the IR Anesthesia Tech (Amy / Jerry) to set up the Monsoon Jet and TcCO₂ monitor', s: 'Send at 6:30 AM' },
+    { id: 'pre-orient', t: 'Confirm patient orientation with IR (head or feet to scanner)', s: 'Decides where the jet and the TcCO₂ monitor go (see Overview)' },
+    { id: 'pre-piv', t: 'Verify 2 PIVs: one for anesthesia, one for IR contrast', s: '20g or larger, above the wrist preferred' }
+  ]},
+  { title: 'ETT & adapter', icon: '🛠️', figure: 'ett', items: [
+    { id: 'ett-size', t: 'Select an 8.0 ETT (minimum)', s: 'A larger tube is needed for adequate jet delivery' },
+    { id: 'ett-attach', t: 'Attach the swivel adapter/catheter assembly to the ETT', s: 'Set the pressure-monitor line tip 1–2 cm above (proximal to) the Murphy eye' },
+    { id: 'ett-tape', t: 'Tape it in a "flag" at the swivel adapter to hold the position' },
+    { id: 'ett-remove', t: 'Remove the swivel adapter assembly and set it aside', s: 'Reattach only after the patient is intubated' }
+  ]},
+  { title: 'TcCO₂ monitor', icon: '📡', items: [
+    { id: 'tc-place', t: 'Place the Sentec monitor where it can be seen from the control room', s: 'Head to scanner: at the feet · Feet to scanner: at the head' },
+    { id: 'tc-attach', t: 'Attach the probe right after moving the patient to the procedure table', s: 'Remove both adhesive covers and add 1–2 drops of contact gel. Calibration takes 2–10 min.' },
+    { id: 'tc-site', t: 'Probe site: earlobe, forehead or clavicle (upper chest)', s: 'Whichever is most convenient for the patient and the procedure' },
+    { id: 'tc-gap', t: 'Note the baseline TcCO₂–ETCO₂ difference before starting the jet' }
+  ]},
+  { title: 'Jet settings', icon: '⚙️', items: [
+    { id: 'jet-f', t: 'F (Frequency): ' + setting('freq').def + ' cpm', s: 'Do not adjust after setting' },
+    { id: 'jet-dp', t: 'DP (Driving Pressure): ' + setting('dp').def + ' psi (range 10–30, ↑ for high BMI)', s: 'The main knob for CO₂' },
+    { id: 'jet-it', t: 'IT (Inspiratory Time): ' + setting('it').def + '% (range 30–45%)' },
+    { id: 'jet-other', t: 'FiO₂ ' + setting('fio2').def + '% · Climatization 3 or 4 · PP alarm 24 · PIP alarm 28' }
+  ]},
+  { title: 'Start the jet', icon: '▶️', items: [
+    { id: 'go-adapter', t: 'After intubation, attach the swivel adapter to the ETT' },
+    { id: 'go-machine', t: 'Anesthesia machine: Manual mode, APL fully open, O₂ flow 1 LPM, vaporizer off', s: 'An open APL prevents back-pressure, a common cause of PP/PIP alarms' },
+    { id: 'go-timing', t: 'Start the jet at the right time', s: 'Head to scanner: after the gantry is brought in · Feet to scanner: right after intubation' },
+    { id: 'go-stable', t: 'Stabilize TcCO₂ (adjust DP) before the initial scan', s: 'After the initial scan, settings are locked unless Faculty agree' },
+    { id: 'go-doc', t: 'Document: check "Jet Ventilator" under Checklist → Ancillary Equipment' }
+  ]}
+];
+
+var ORIENT = {
+  head: '🔵 <strong>Head to scanner</strong> (liver / lung ablation)<br>• Jet ventilator <strong>behind</strong> the gantry<br>• TcCO₂ monitor at the <strong>feet</strong><br>• Start the jet only <strong>after the gantry is brought in</strong>',
+  feet: '🟠 <strong>Feet to scanner</strong> (renal / some livers)<br>• Jet ventilator <strong>in front</strong> of the gantry, on the side opposite the IR physician<br>• TcCO₂ monitor at the <strong>head</strong><br>• Start the jet <strong>right after intubation</strong>'
+};
+
+/* ================= STORAGE (per device, optional) ================= */
+function load(key, fallback) {
+  try { var v = localStorage.getItem('hfjv.' + key); return v ? JSON.parse(v) : fallback; } catch (e) { return fallback; }
+}
+function save(key, val) {
+  try { localStorage.setItem('hfjv.' + key, JSON.stringify(val)); } catch (e) {}
+}
+
+function $(id) { return document.getElementById(id); }
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+/* ================= NAVIGATION ================= */
+var SECTIONS = ['overview', 'setup', 'simulator', 'scenarios', 'reference'];
+
 function showSection(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  const tabs = document.querySelectorAll('.nav-tab');
-  const map = {overview:0, setup:1, machine:2, scenarios:3, reference:4};
-  tabs[map[id]].classList.add('active');
-}
-
-// ORIENTATION
-function selectOrient(type) {
-  document.getElementById('orient-head').classList.remove('selected');
-  document.getElementById('orient-feet').classList.remove('selected');
-  document.getElementById('orient-'+type).classList.add('selected');
-  // hide "tap" prompts on selected card
-  document.querySelectorAll('.orient-card').forEach(function(c) {
-    var lbl = c.querySelector('.tap-hint');
-    if (lbl) lbl.style.display = 'block';
+  if (SECTIONS.indexOf(id) < 0) id = 'overview';
+  SECTIONS.forEach(function (s) { $(s).classList.toggle('active', s === id); });
+  document.querySelectorAll('.nav-tab').forEach(function (t) {
+    t.setAttribute('aria-selected', t.dataset.section === id ? 'true' : 'false');
   });
-  var hint = document.querySelector('#orient-'+type+' .tap-hint');
-  if (hint) hint.style.display = 'none';
-  const note = document.getElementById('orient-note');
-  note.style.display = 'block';
-  if (type === 'head') {
-    note.innerHTML = '🔵 <strong>Head to Scanner (Liver/Lung Ablation):</strong><br>• Jet ventilator placed <strong>behind</strong> the gantry<br>• TcCO₂ monitor at <strong>feet</strong><br>• Must wait for gantry to be brought in before initiating jet';
-  } else {
-    note.innerHTML = '🟠 <strong>Feet to Scanner (Renal/Some Livers):</strong><br>• Jet ventilator placed <strong>in front</strong> of gantry, opposite side from IR physician<br>• TcCO₂ monitor at <strong>head</strong><br>• Can initiate jet ventilation immediately after intubation';
-  }
+  hideGloss();
 }
-// Auto-expand Head on load + set dynamic top-bar offset
-function setTopBarOffset() {
-  var tb = document.querySelector('.top-bar');
-  if (tb) {
-    var h = tb.getBoundingClientRect().height;
-    document.documentElement.style.setProperty('--top-bar-h', (h + 4) + 'px');
-  }
+function go(id) {
+  if (location.hash === '#' + id) showSection(id);
+  else location.hash = id;
+  window.scrollTo(0, 0);
 }
-window.addEventListener('DOMContentLoaded', function() {
-  try { selectOrient('head'); } catch(e) {}
-  setTopBarOffset();
+window.addEventListener('hashchange', function () { showSection(location.hash.slice(1)); window.scrollTo(0, 0); });
+document.querySelectorAll('.nav-tab').forEach(function (t) {
+  t.addEventListener('click', function () { go(t.dataset.section); });
 });
-window.addEventListener('resize', setTopBarOffset);
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-go]');
+  if (b) go(b.dataset.go);
+});
 
-// CHECKLIST
-let checks = {pre:0, ett:0, tcco2:0, jet:0};
-let totals = {pre:3, ett:4, tcco2:3, jet:4};
-let totalDone = 0;
-let totalItems = 14;
+/* ================= GOLDEN RULE ================= */
+document.querySelectorAll('.golden-rule').forEach(function (el) {
+  el.innerHTML =
+    '<div class="golden-icon">🔒</div><div>' +
+    '<div class="golden-title">The golden rule</div>' +
+    '<ol><li><strong>Before the initial scan:</strong> adjust DP until TcCO₂ is stable.</li>' +
+    '<li><strong>After the initial scan:</strong> settings are locked. Change DP, IT or F only after discussing with the Anesthesia and IR Faculty.</li></ol>' +
+    '<div class="golden-foot">Raising FiO₂ for low SpO₂ is OK at any time. Never change F from 150.</div></div>';
+});
 
-function toggleCheck(el, group) {
-  const isDone = el.classList.contains('done');
-  el.classList.toggle('done');
-  checks[group] += isDone ? -1 : 1;
-  totalDone += isDone ? -1 : 1;
+/* ================= OVERVIEW ================= */
+function selectOrient(type) {
+  document.querySelectorAll('.orient-card').forEach(function (c) {
+    c.setAttribute('aria-pressed', c.dataset.orient === type ? 'true' : 'false');
+  });
+  $('orient-note').innerHTML = ORIENT[type];
+  glossify($('orient-note'));
+}
+document.querySelectorAll('.orient-card').forEach(function (c) {
+  c.addEventListener('click', function () { selectOrient(c.dataset.orient); });
+});
+
+// Waveform comparison: conventional (~12/min) vs jet (150/min) over 10 s, same scale.
+(function drawWaves() {
+  var svg = $('wave-svg'), x0 = 14, w = 296, n = 600;
+  function path(fn, base) {
+    var d = '';
+    for (var i = 0; i <= n; i++) {
+      var t = 10 * i / n;
+      d += (i ? 'L' : 'M') + (x0 + w * i / n).toFixed(1) + ',' + (base - fn(t)).toFixed(1);
+    }
+    return d;
+  }
+  function conv(t) {
+    var p = t % 5;
+    if (p < 1.2) return 52 * Math.sin(Math.PI / 2 * p / 1.2);
+    return 52 * Math.exp(-(p - 1.2) * 2.2);
+  }
+  function jet(t) {
+    var p = (t * 2.5) % 1;
+    return p < 0.35 ? 7 * Math.sin(Math.PI * p / 0.35) : 0;
+  }
+  svg.innerHTML =
+    '<text x="14" y="16" font-size="12" font-weight="700" fill="#0f172a">Conventional · ~12 breaths/min</text>' +
+    '<line x1="14" x2="310" y1="84" y2="84" stroke="#dde3ec"/>' +
+    '<path d="' + path(conv, 84) + '" fill="none" stroke="#1d6fa4" stroke-width="2"/>' +
+    '<text x="14" y="120" font-size="12" font-weight="700" fill="#0f172a">Jet · 150 pulses/min</text>' +
+    '<line x1="14" x2="310" y1="178" y2="178" stroke="#dde3ec"/>' +
+    '<path d="' + path(jet, 178) + '" fill="none" stroke="#e07b39" stroke-width="1.6"/>' +
+    '<text x="14" y="200" font-size="10.5" fill="#374151">0 s</text>' +
+    '<text x="310" y="200" font-size="10.5" fill="#374151" text-anchor="end">10 s</text>' +
+    '<text x="162" y="200" font-size="10.5" fill="#374151" text-anchor="middle">airway pressure over time</text>';
+})();
+
+/* ================= SETUP CHECKLIST ================= */
+var checked = load('checks', {});
+var phaseIdx = 0;
+var showAll = false;
+var ALL_ITEMS = [].concat.apply([], SETUP.map(function (p) { return p.items; }));
+
+function ettFigure() {
+  // Labels are drawn in the image's own coordinates so they stay aligned at any width.
+  return '<div class="fig-pair" style="margin-bottom:16px;">' +
+    '<figure><svg viewBox="360 20 700 740" role="img" aria-label="Illustration of the ETT with swivel adapter assembly: cuff at the tip, pilot balloon, swivel adapter, and tape flag below the adapter.">' +
+      '<image href="assets/ett-adapter.jpg" x="0" y="0" width="1376" height="768"/>' +
+      '<g font-family="DM Sans, sans-serif" font-size="30" font-weight="700" fill="#0f172a">' +
+        '<line x1="720" y1="115" x2="800" y2="115" stroke="#0f172a" stroke-width="2"/><text x="808" y="125">Cuff</text>' +
+        '<line x1="705" y1="300" x2="800" y2="300" stroke="#0f172a" stroke-width="2"/><text x="808" y="310">8.0 ETT</text>' +
+        '<line x1="750" y1="455" x2="800" y2="455" stroke="#0f172a" stroke-width="2"/><text x="808" y="448">Swivel</text><text x="808" y="482">adapter</text>' +
+        '<line x1="750" y1="565" x2="800" y2="565" stroke="#0f172a" stroke-width="2"/><text x="808" y="575">Tape "flag"</text>' +
+        '<text x="372" y="410">Pilot</text><text x="372" y="444">balloon</text>' +
+      '</g></svg><figcaption>The assembled tube, simplified.</figcaption></figure>' +
+    '<figure class="photo"><img src="assets/ett-adapter-photo.jpg" alt="Photo of a real ETT with the swivel adapter assembly attached, on a procedure table." width="714" height="948" style="max-height:340px;width:auto;">' +
+      '<figcaption>The real setup.</figcaption></figure>' +
+    '</div>';
+}
+
+function phaseCount(p) { return p.items.filter(function (it) { return checked[it.id]; }).length; }
+
+function renderPhase(p, i) {
+  var html = '<section class="card" data-phase="' + i + '">' +
+    '<h2 class="card-title"><span class="icon icon-blue">' + p.icon + '</span> ' + (i + 1) + '. ' + esc(p.title) + '</h2>';
+  if (p.figure === 'ett') html += ettFigure();
+  html += '<ul class="checklist">' + p.items.map(function (it) {
+    var on = !!checked[it.id];
+    return '<li><label class="check-item' + (on ? ' done' : '') + '">' +
+      '<input type="checkbox" class="sr-only" data-id="' + it.id + '"' + (on ? ' checked' : '') + '>' +
+      '<span class="check-box" aria-hidden="true"></span>' +
+      '<span class="check-text">' + esc(it.t) + (it.s ? '<span class="check-sub" style="display:block;">' + esc(it.s) + '</span>' : '') + '</span>' +
+      '</label></li>';
+  }).join('') + '</ul>';
+  if (!showAll) {
+    html += '<div class="phase-nav">' +
+      (i > 0 ? '<button class="btn btn-ghost" data-phase-go="' + (i - 1) + '">← Back</button>' : '<span></span>') +
+      (i < SETUP.length - 1
+        ? '<button class="btn" data-phase-go="' + (i + 1) + '">Next: ' + esc(SETUP[i + 1].title) + ' →</button>'
+        : '<button class="btn" data-go="simulator">Go to the simulator →</button>') +
+      '</div>';
+  }
+  return html + '</section>';
+}
+
+function renderSetup() {
+  $('stepper').innerHTML = SETUP.map(function (p, i) {
+    var c = phaseCount(p), done = c === p.items.length;
+    return '<button class="step-pill' + (done ? ' complete' : '') + '" data-phase-go="' + i + '"' + (i === phaseIdx && !showAll ? ' aria-current="step"' : '') + '>' +
+      '<span class="sp-num">' + (done ? '✓ ' : '') + 'STEP ' + (i + 1) + ' · ' + c + '/' + p.items.length + '</span>' +
+      '<span class="sp-name">' + esc(p.title) + '</span></button>';
+  }).join('');
+  $('setup-phases').innerHTML = showAll
+    ? SETUP.map(renderPhase).join('')
+    : renderPhase(SETUP[phaseIdx], phaseIdx);
+  $('toggle-all').textContent = showAll ? 'Show one phase at a time' : 'Show all phases';
+  glossify($('setup-phases'));
   updateProgress();
 }
 
 function updateProgress() {
-  const pct = Math.round((totalDone / totalItems) * 100);
-  document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('progress-text').innerText = totalDone + ' / ' + totalItems;
-  if (totalDone === totalItems) {
-    document.getElementById('setup-complete').style.display = 'block';
-  }
+  var done = ALL_ITEMS.filter(function (it) { return checked[it.id]; }).length;
+  var total = ALL_ITEMS.length;
+  $('progress-fill').style.width = Math.round(done / total * 100) + '%';
+  $('progress-text').textContent = done + ' / ' + total;
+  $('setup-complete').hidden = done !== total;
 }
 
-// MACHINE
-let settings = { dp: 18, it: 35, fio2: 50, freq: 150 };
-let limits = { dp:[10,30], it:[30,45], fio2:[21,100], freq:[100,200] };
-let jetRunning = false;
-let tcco2 = 42;
-let tcco2Interval = null;
+$('setup').addEventListener('change', function (e) {
+  var id = e.target.dataset && e.target.dataset.id;
+  if (!id) return;
+  if (e.target.checked) checked[id] = true; else delete checked[id];
+  save('checks', checked);
+  e.target.closest('.check-item').classList.toggle('done', e.target.checked);
+  // Refresh the counts in the stepper without re-rendering the list (keeps focus).
+  SETUP.forEach(function (p, i) {
+    var pill = $('stepper').children[i], c = phaseCount(p), done = c === p.items.length;
+    pill.classList.toggle('complete', done);
+    pill.querySelector('.sp-num').textContent = (done ? '✓ ' : '') + 'STEP ' + (i + 1) + ' · ' + c + '/' + p.items.length;
+  });
+  updateProgress();
+});
+$('setup').addEventListener('click', function (e) {
+  var b = e.target.closest('[data-phase-go]');
+  if (!b) return;
+  phaseIdx = +b.dataset.phaseGo;
+  showAll = false;
+  renderSetup();
+  $('stepper').scrollIntoView({ block: 'nearest' });
+});
+$('toggle-all').addEventListener('click', function () { showAll = !showAll; renderSetup(); });
+$('clear-checks').addEventListener('click', function () {
+  if (!confirm('Clear all checklist ticks?')) return;
+  checked = {}; save('checks', checked); phaseIdx = 0; renderSetup();
+});
 
-// Map param names to their display element IDs (disp panel uses 'f' for freq)
-var dispIdMap = { dp: 'disp-dp', it: 'disp-it', fio2: 'disp-fio2', freq: 'disp-f' };
+/* ================= SIMULATOR ================= */
+var S; // simulator state
+var timer = null;
+var TICK_MS = 1000, MIN_PER_TICK = 0.5;
+var pendingChange = null;
 
-function adjustVal(param, delta) {
-  try {
-    settings[param] = Math.min(limits[param][1], Math.max(limits[param][0], settings[param] + delta));
-    var knobEl = document.getElementById('knob-' + param);
-    if (knobEl) knobEl.innerText = settings[param];
-    var dispEl = document.getElementById(dispIdMap[param]);
-    if (dispEl) dispEl.innerText = settings[param];
-    // Show last-resort warning when frequency is changed from default
-    if (param === 'freq') {
-      var freqWarn = document.getElementById('freq-warn');
-      if (freqWarn) freqWarn.style.display = settings[param] !== 150 ? 'block' : 'none';
-    }
-    if (jetRunning) updateTcco2Trend();
-    checkAlarms();
-  } catch(e) {
-    // Silently ignore any DOM update errors
+function freshState() {
+  var st = { running: false, t: 0, calib: 0, scanned: false, scanT: null,
+    tcco2: 42, spo2: 98, pp: 12, history: [],
+    alarm: 'off', event: null, pipCause: null, co2Offset: 0, spo2Offset: 0, suctioned: false,
+    nextCheck: 15, checkDue: false, settings: {} };
+  SETTINGS.forEach(function (s) { st.settings[s.key] = s.def; });
+  return st;
+}
+
+function co2Target() {
+  var v = S.settings;
+  return Math.max(20, Math.min(85, 42 + S.co2Offset - 2.2 * (v.dp - 18) - 0.25 * (v.it - 35)));
+}
+function spo2Target() {
+  var v = S.settings;
+  return Math.min(100, 93 + 0.15 * (v.fio2 - 21) + 0.25 * (v.it - 35) + 0.15 * (v.dp - 18) + S.spo2Offset);
+}
+function ppTarget() {
+  var v = S.settings;
+  return 12 + 1.2 * (v.dp - 18) + 0.25 * (v.it - 35) + (S.pipCause ? 13 : 0);
+}
+
+function renderKnobs() {
+  $('knobs').innerHTML = SETTINGS.map(function (s) {
+    var locked = S.scanned && s.locks;
+    return '<div class="knob-group' + (locked ? ' locked' : '') + '">' +
+      '<div class="knob-label">' + (locked ? '🔒 ' : '') + s.short + ' (' + s.unit.toUpperCase() + ')</div>' +
+      '<div class="knob-controls">' +
+        '<button class="knob-btn" data-knob="' + s.key + '" data-dir="-1" aria-label="Decrease ' + s.name + '">−</button>' +
+        '<div class="knob-val" id="knob-' + s.key + '" aria-live="polite">' + S.settings[s.key] + '</div>' +
+        '<button class="knob-btn" data-knob="' + s.key + '" data-dir="1" aria-label="Increase ' + s.name + '">+</button>' +
+      '</div><div class="knob-unit">' + s.min + '–' + s.max + ' ' + s.unit + '</div></div>';
+  }).join('');
+}
+
+$('knobs').addEventListener('click', function (e) {
+  var b = e.target.closest('[data-knob]');
+  if (!b) return;
+  var s = setting(b.dataset.knob);
+  var val = Math.min(s.max, Math.max(s.min, S.settings[s.key] + s.step * (+b.dataset.dir)));
+  if (val === S.settings[s.key]) return;
+  if (S.scanned && s.locks) {
+    pendingChange = { key: s.key, val: val };
+    var dlg = $('lock-dialog');
+    if (dlg.showModal) dlg.showModal();
+    else if (confirm('Settings are locked after the initial scan. Have you discussed this with Faculty?')) applyChange(s.key, val, true);
+    return;
   }
+  applyChange(s.key, val, false);
+});
+$('lock-ok').addEventListener('click', function () {
+  $('lock-dialog').close();
+  if (pendingChange) applyChange(pendingChange.key, pendingChange.val, true);
+  pendingChange = null;
+});
+$('lock-cancel').addEventListener('click', function () { $('lock-dialog').close(); pendingChange = null; });
+
+function applyChange(key, val, discussed) {
+  var s = setting(key), old = S.settings[key];
+  S.settings[key] = val;
+  $('knob-' + key).textContent = val;
+  if (S.running) log(s.short + ' ' + old + ' → ' + val + ' ' + s.unit + (discussed ? ' (after Faculty discussion)' : ''));
+  renderSim();
+}
+
+function log(msg) {
+  var li = document.createElement('li');
+  li.innerHTML = '<time>' + fmtTime(S.t) + '</time><span>' + msg + '</span>';
+  $('sim-log').prepend(li);
+  while ($('sim-log').children.length > 30) $('sim-log').lastChild.remove();
+}
+function fmtTime(m) {
+  var mm = Math.floor(m), ss = Math.round((m - mm) * 60);
+  return mm + ':' + (ss < 10 ? '0' : '') + ss;
 }
 
 function startJet() {
-  try {
-    jetRunning = true;
-    document.getElementById('btn-start').style.display = 'none';
-    document.getElementById('btn-stop').style.display = 'inline-block';
-    tcco2 = 42 + (Math.random() * 6 - 3);
-    document.getElementById('tcco2-val').innerText = Math.round(tcco2);
-    document.getElementById('tcco2-status').innerText = 'Calibrating... (grey = pending)';
-    setTimeout(function() {
-      try {
-        if (jetRunning) document.getElementById('tcco2-status').innerText = 'Stabilized \u2713 \u2014 monitor q15min';
-      } catch(e) {}
-    }, 3000);
-    tcco2Interval = setInterval(simulateTcco2, 10000);
-  } catch(e) {}
+  if (S.running) return;
+  S.running = true;
+  S.calib = 3;
+  $('btn-start').hidden = true;
+  $('btn-stop').hidden = false;
+  log('Jet started. TcCO₂ settling…');
+  timer = setInterval(tick, TICK_MS);
+  renderSim();
 }
-
 function stopJet() {
-  try {
-    jetRunning = false;
-    document.getElementById('btn-start').style.display = 'inline-block';
-    document.getElementById('btn-stop').style.display = 'none';
-    clearInterval(tcco2Interval);
-    document.getElementById('tcco2-val').innerText = '--';
-    document.getElementById('tcco2-status').innerText = 'Jet stopped \u2014 return to conventional vent';
-  } catch(e) {}
+  S.running = false;
+  clearInterval(timer); timer = null;
+  $('btn-start').hidden = false;
+  $('btn-stop').hidden = true;
+  log('Jet stopped. Back to conventional ventilation.');
+  renderSim();
+}
+function resetSim() {
+  clearInterval(timer); timer = null;
+  S = freshState();
+  $('btn-start').hidden = false;
+  $('btn-stop').hidden = true;
+  $('sim-log').innerHTML = '';
+  renderKnobs();
+  renderEvents();
+  renderSim();
 }
 
-function resetMachine() {
-  try {
-    stopJet();
-    settings = { dp:18, it:35, fio2:50, freq:150 };
-    var dispMap = { dp:'disp-dp', it:'disp-it', fio2:'disp-fio2', freq:'disp-f' };
-    ['dp','it','fio2','freq'].forEach(function(p) {
-      var k = document.getElementById('knob-'+p);
-      if (k) k.innerText = settings[p];
-      var d = document.getElementById(dispMap[p]);
-      if (d) d.innerText = settings[p];
-    });
-    var ab = document.getElementById('alarm-box');
-    if (ab) ab.classList.remove('visible');
-    var fw = document.getElementById('freq-warn');
-    if (fw) fw.style.display = 'none';
-    tcco2 = 42;
-  } catch(e) {}
+function tick() {
+  S.t += MIN_PER_TICK;
+  if (S.calib > 0) S.calib--;
+  S.tcco2 += (co2Target() - S.tcco2) * 0.12 + (Math.random() - 0.5) * 0.6;
+  S.spo2 = Math.min(100, S.spo2 + (spo2Target() - S.spo2) * 0.25 + (Math.random() - 0.5) * 0.4);
+  S.pp += (ppTarget() - S.pp) * 0.6;
+  S.history.push({ t: S.t, v: S.tcco2 });
+  if (S.history.length > 60) S.history.shift();
+  if (S.pp > PP_ALARM && S.alarm === 'off') { S.alarm = 'sounding'; log('⚠ PP/PIP high alarm.'); }
+  if (S.t >= S.nextCheck) { S.checkDue = true; S.nextCheck += 15; }
+  renderSim();
 }
 
-function simulateTcco2() {
-  if (!jetRunning) return;
-  try {
-    var dpEffect = (18 - settings.dp) * 1.5;
-    var drift = (Math.random() - 0.45) * 2;
-    tcco2 = Math.max(20, Math.min(75, tcco2 + dpEffect * 0.3 + drift));
-    var valEl = document.getElementById('tcco2-val');
-    if (valEl) valEl.innerText = Math.round(tcco2);
-    var statusEl = document.getElementById('tcco2-status');
-    if (statusEl) {
-      if (tcco2 > 60) {
-        statusEl.innerText = '\u26a0 HIGH \u2014 consider \u2191 DP';
-        statusEl.style.color = '#dc2626';
-      } else if (tcco2 < 25) {
-        statusEl.innerText = '\u26a0 LOW \u2014 consider \u2193 DP';
-        statusEl.style.color = '#b45309';
-      } else {
-        statusEl.innerText = 'Stable \u2713';
-        statusEl.style.color = '#4ade80';
-      }
+function tcco2Stable() {
+  var h = S.history;
+  if (h.length < 8) return false;
+  var recent = h.slice(-8).map(function (p) { return p.v; });
+  return Math.max.apply(null, recent) - Math.min.apply(null, recent) < 2.5 && S.tcco2 >= 25 && S.tcco2 <= 60;
+}
+
+function setMon(id, val, cls, status) {
+  var el = $('mon-' + id);
+  el.className = 'mon' + (id === 'tcco2' ? ' mon-tcco2' : '') + (cls ? ' ' + cls : '');
+  $('val-' + id).textContent = val;
+  $('st-' + id).textContent = status;
+}
+
+function renderSim() {
+  var v = S.settings;
+  // Monitors
+  if (!S.running) {
+    setMon('tcco2', '--', '', S.t ? 'Jet stopped' : 'Jet off');
+    setMon('spo2', '--', '', '');
+    setMon('pp', '--', '', 'alarm >' + PP_ALARM);
+  } else {
+    if (S.calib > 0) setMon('tcco2', Math.round(S.tcco2), 'cal', 'Settling…');
+    else if (S.tcco2 > 60) setMon('tcco2', Math.round(S.tcco2), 'bad', '▲ High (>60)');
+    else if (S.tcco2 < 25) setMon('tcco2', Math.round(S.tcco2), 'bad', '▼ Low (<25)');
+    else setMon('tcco2', Math.round(S.tcco2), 'ok', '✓ In range');
+    var sp = Math.round(S.spo2);
+    setMon('spo2', sp, sp < 92 ? 'bad' : 'ok', sp < 92 ? '▼ Low' : '✓ OK');
+    var pp = Math.round(S.pp);
+    setMon('pp', pp, pp > PP_ALARM ? 'bad' : 'ok', pp > PP_ALARM ? '▲ Above ' + PP_ALARM : 'alarm >' + PP_ALARM);
+  }
+  $('sim-clock').textContent = 'Case time ' + fmtTime(S.t);
+
+  // Controls
+  $('btn-scan').disabled = !S.running || S.scanned;
+  $('btn-scan').textContent = S.scanned ? '🔒 SCAN DONE' : '📷 INITIAL SCAN';
+  $('freq-warn').hidden = v.freq === setting('freq').def;
+  var level = v.freq >= 150 ? 1 : v.freq >= 130 ? 2 : 3;
+  Array.prototype.forEach.call($('motion-bars').children, function (b, i) { b.classList.toggle('on', i < level); });
+  $('motion-text').textContent = ['Minimal', 'More', 'Much more'][level - 1];
+
+  // Alarm
+  var ab = $('alarm-box');
+  ab.hidden = S.alarm === 'off';
+  ab.className = 'alarm-box ' + S.alarm;
+  $('alarm-title').textContent = S.alarm === 'silenced' ? '🔕 ALARM SILENCED — PP/PIP HIGH' : '⚠ ALARM — PP/PIP HIGH';
+  $('btn-silence').disabled = S.alarm !== 'sounding';
+  $('btn-alarm-reset').disabled = S.alarm !== 'silenced';
+
+  $('check-due').hidden = !(S.running && S.checkDue);
+  renderHint();
+  renderTrend();
+}
+
+function renderHint() {
+  var h = hintFor(), el = $('hint');
+  el.className = 'hint ' + (h[0] || '');
+  el.innerHTML = '<span class="hint-icon">' + h[1] + '</span><span>' + h[2] + '</span>';
+}
+function hintFor() {
+  var post = S.scanned ? ' <em>Post-scan: discuss with Faculty first.</em>' : '';
+  if (!S.running) return ['', '▶️', S.t ? 'Jet stopped. Press <strong>Start Jet</strong> to resume or <strong>Reset</strong> for a new case.' : 'Press <strong>Start Jet</strong> to begin.'];
+  if (S.alarm !== 'off') return ['danger', '🚨', 'PP/PIP alarm. Use the <strong>bedside checks</strong>: tubing → suction ETT → TOF → APL valve. Then <strong>Silence</strong>, then <strong>Alarm Reset</strong>.'];
+  if (S.calib > 0) return ['', '⏳', 'TcCO₂ is settling…'];
+  if (S.spo2 < 92) return ['danger', '🫁', 'SpO₂ low. <strong>↑ FiO₂ first</strong> (OK any time). Then check breath sounds and suction. Next: ↑ IT 5% or ↑ DP.' + post];
+  if (S.tcco2 > 60) return ['danger', '📈', 'TcCO₂ high. <strong>↑ DP by 1–2 psi</strong> and give it a minute.' + post];
+  if (S.tcco2 < 25) return ['warn', '📉', 'TcCO₂ low. <strong>↓ DP by 1–2 psi</strong>.' + post];
+  if (S.settings.freq !== 150) return ['warn', '⚠️', 'Put the frequency back to 150 cpm and use DP for CO₂.'];
+  if (!S.scanned) {
+    if (tcco2Stable()) return ['good', '✅', 'TcCO₂ is stable and in range. Ready for the <strong>initial scan</strong>.'];
+    return ['', '🎯', 'Stabilize TcCO₂ with DP before the initial scan. Watch the trend flatten.'];
+  }
+  if (S.tcco2 > 55) return ['warn', '👀', 'TcCO₂ is creeping up. Up to 60 is permissive; if it keeps rising, talk to Faculty about ↑ DP.'];
+  return ['good', '🔒', 'Settings locked. Monitor TcCO₂ and TOF every 15 minutes.'];
+}
+
+function renderTrend() {
+  var svg = $('trend-svg'), L = 30, R = 312, T = 10, B = 118;
+  function y(v) { return B - (Math.max(15, Math.min(85, v)) - 15) / 70 * (B - T); }
+  var tEnd = Math.max(30, S.t), tStart = tEnd - 30;
+  function x(t) { return L + (t - tStart) / 30 * (R - L); }
+  var out = '<rect x="' + L + '" y="' + y(60) + '" width="' + (R - L) + '" height="' + (y(25) - y(60)) + '" fill="#dcfce7"/>';
+  [25, 40, 60, 80].forEach(function (g) {
+    out += '<line x1="' + L + '" x2="' + R + '" y1="' + y(g) + '" y2="' + y(g) + '" stroke="' + (g === 25 || g === 60 ? '#86efac' : '#e5e7eb') + '" stroke-width="1"/>' +
+      '<text x="' + (L - 5) + '" y="' + (y(g) + 4) + '" font-size="10" text-anchor="end" fill="#374151">' + g + '</text>';
+  });
+  out += '<line x1="' + L + '" x2="' + R + '" y1="' + B + '" y2="' + B + '" stroke="#9ca3af"/>';
+  out += '<text x="' + L + '" y="134" font-size="10" fill="#374151">' + fmtTime(tStart) + '</text>' +
+         '<text x="' + R + '" y="134" font-size="10" fill="#374151" text-anchor="end">' + fmtTime(tEnd) + '</text>';
+  if (S.scanned && S.scanT >= tStart) {
+    out += '<line x1="' + x(S.scanT) + '" x2="' + x(S.scanT) + '" y1="' + T + '" y2="' + B + '" stroke="#ea580c" stroke-dasharray="3 3"/>' +
+      '<text x="' + (x(S.scanT) + 4) + '" y="' + (T + 10) + '" font-size="10" fill="#9a3412">🔒 scan</text>';
+  }
+  if (S.history.length > 1) {
+    out += '<path d="' + S.history.map(function (p, i) { return (i ? 'L' : 'M') + x(p.t).toFixed(1) + ',' + y(p.v).toFixed(1); }).join('') +
+      '" fill="none" stroke="#1d6fa4" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
+    var last = S.history[S.history.length - 1];
+    out += '<circle cx="' + x(last.t) + '" cy="' + y(last.v) + '" r="4" fill="#1d6fa4" stroke="#fff" stroke-width="2"/>';
+  } else {
+    out += '<text x="' + ((L + R) / 2) + '" y="' + ((T + B) / 2) + '" font-size="12" fill="#374151" text-anchor="middle">Start the jet to see the trend</text>';
+  }
+  out += '<g id="trend-hover"></g><rect id="trend-hit" x="' + L + '" y="' + T + '" width="' + (R - L) + '" height="' + (B - T) + '" fill="transparent"/>';
+  svg.innerHTML = out;
+  svg._x = x; svg._y = y; svg._L = L; svg._R = R; svg._T = T; svg._B = B;
+}
+// Crosshair + tooltip on the trend.
+$('trend-svg').addEventListener('pointermove', function (e) {
+  var svg = this, h = S.history;
+  if (!h.length || !svg._x) return;
+  var pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+  var p = pt.matrixTransform(svg.getScreenCTM().inverse());
+  var best = h[0];
+  h.forEach(function (d) { if (Math.abs(svg._x(d.t) - p.x) < Math.abs(svg._x(best.t) - p.x)) best = d; });
+  var cx = svg._x(best.t), cy = svg._y(best.v), label = fmtTime(best.t) + ' · ' + Math.round(best.v) + ' mmHg';
+  var tx = Math.min(cx + 8, svg._R - 92);
+  svg.querySelector('#trend-hover').innerHTML =
+    '<line x1="' + cx + '" x2="' + cx + '" y1="' + svg._T + '" y2="' + svg._B + '" stroke="#374151" stroke-width="1"/>' +
+    '<circle cx="' + cx + '" cy="' + cy + '" r="4" fill="#1d6fa4" stroke="#fff" stroke-width="2"/>' +
+    '<rect x="' + tx + '" y="' + (svg._T + 2) + '" width="90" height="18" rx="4" fill="#0f172a"/>' +
+    '<text x="' + (tx + 45) + '" y="' + (svg._T + 15) + '" font-size="10.5" fill="#fff" text-anchor="middle">' + label + '</text>';
+});
+$('trend-svg').addEventListener('pointerleave', function () {
+  var g = this.querySelector('#trend-hover'); if (g) g.innerHTML = '';
+});
+
+$('btn-start').addEventListener('click', startJet);
+$('btn-stop').addEventListener('click', stopJet);
+$('btn-reset').addEventListener('click', resetSim);
+$('btn-scan').addEventListener('click', function () {
+  if (!tcco2Stable() && !confirm('TcCO₂ isn\'t stable yet. Take the initial scan anyway?')) return;
+  S.scanned = true; S.scanT = S.t;
+  log('📷 Initial scan acquired. DP, IT and F are now locked.');
+  renderKnobs(); renderSim();
+});
+$('btn-silence').addEventListener('click', function () {
+  S.alarm = 'silenced'; log('Alarm silenced.'); renderSim();
+});
+$('btn-alarm-reset').addEventListener('click', function () {
+  if (S.pp > PP_ALARM) { S.alarm = 'sounding'; log('Alarm Reset: the condition is still present, so the alarm sounds again. Keep troubleshooting.'); }
+  else { S.alarm = 'off'; log('✓ Alarm Reset. Alarm cleared.'); }
+  renderSim();
+});
+$('btn-check-done').addEventListener('click', function () {
+  S.checkDue = false;
+  log('15-min check: TcCO₂ ' + Math.round(S.tcco2) + ' documented, TOF ' + (S.pipCause === 'paralysis' ? '3/4 (inadequate)' : '≤1/4') + '.');
+  renderSim();
+});
+
+// Bedside checks
+var CHECKS = [
+  { key: 'tubing', label: '🔍 Check jet tubing' },
+  { key: 'suction', label: '🧹 Suction ETT' },
+  { key: 'tof', label: '⚡ Check TOF' },
+  { key: 'apl', label: '🔧 Check APL valve' },
+  { key: 'listen', label: '🩺 Breath sounds' }
+];
+$('bedside').innerHTML = CHECKS.map(function (c) {
+  return '<button class="btn btn-ghost btn-sm" data-check="' + c.key + '">' + c.label + '</button>';
+}).join('');
+$('bedside').addEventListener('click', function (e) {
+  var b = e.target.closest('[data-check]');
+  if (!b) return;
+  var k = b.dataset.check, c = S.pipCause, msg;
+  if (k === 'tubing') msg = c === 'kink' ? 'Found a <strong>kink in the jet tubing</strong>. Straightened.' : 'Jet tubing patent, no kinks.';
+  if (k === 'suction') {
+    if (c === 'secretions') msg = '<strong>Thick secretions</strong> suctioned from the ETT.';
+    else if (S.event === 'desat' && !S.suctioned) { S.suctioned = true; S.spo2Offset += 5; msg = 'Moderate secretions cleared. SpO₂ should improve a bit.'; }
+    else msg = 'Minimal secretions.';
+  }
+  if (k === 'tof') msg = c === 'paralysis' ? 'TOF 3/4: <strong>paralysis inadequate</strong>. Neuromuscular blocker redosed.' : 'TOF ≤1/4: paralysis adequate.';
+  if (k === 'apl') msg = c === 'apl' ? 'APL valve was <strong>partially closed</strong>. Opened fully.' : 'APL valve fully open.';
+  if (k === 'listen') msg = S.event === 'desat' && !S.suctioned ? 'Bilateral and equal (no mainstem intubation), but coarse. Secretions?' : 'Bilateral, equal breath sounds.';
+  if (c && ((k === 'tubing' && c === 'kink') || (k === 'suction' && c === 'secretions') || (k === 'tof' && c === 'paralysis') || (k === 'apl' && c === 'apl'))) {
+    S.pipCause = null;
+    msg += ' Pressures should come down. Now Silence → Alarm Reset.';
+  }
+  if (!S.running) msg = '(Jet is off.) ' + msg;
+  log(msg);
+  renderSim();
+});
+
+// Practice events
+var EVENTS = [
+  { key: 'highco2', title: 'Rising CO₂', sub: 'High-BMI patient' },
+  { key: 'desat', title: 'Desaturation', sub: 'SpO₂ falling' },
+  { key: 'pip', title: 'PP/PIP alarm', sub: 'Find the cause' },
+  { key: 'none', title: 'Clear event', sub: 'Back to baseline' }
+];
+function renderEvents() {
+  $('events').innerHTML = EVENTS.map(function (ev) {
+    return '<button class="event-btn" data-event="' + ev.key + '" aria-pressed="' + (S.event === ev.key ? 'true' : 'false') + '">' +
+      '<strong>' + ev.title + '</strong><span>' + ev.sub + '</span></button>';
+  }).join('');
+}
+$('events').addEventListener('click', function (e) {
+  var b = e.target.closest('[data-event]');
+  if (b) startEvent(b.dataset.event);
+});
+function startEvent(key) {
+  S.co2Offset = 0; S.spo2Offset = 0; S.pipCause = null; S.suctioned = false; S.event = null;
+  if (key !== 'none') {
+    if (!S.running) startJet();
+    S.event = key;
+    if (key === 'highco2') { S.co2Offset = 16; log('Event: high-BMI patient. CO₂ is starting to climb.'); }
+    if (key === 'desat') { S.spo2Offset = -10; log('Event: SpO₂ is starting to fall.'); }
+    if (key === 'pip') {
+      var causes = ['kink', 'secretions', 'paralysis', 'apl'];
+      S.pipCause = causes[Math.floor(Math.random() * causes.length)];
+      log('Event: airway pressure is rising…');
     }
-  } catch(e) {}
+  } else {
+    log('Events cleared.');
+  }
+  renderEvents();
+  renderSim();
 }
 
-function updateTcco2Trend() { /* reactive on next tick */ }
-
-function checkAlarms() {
-  try {
-    var alarmEl = document.getElementById('alarm-box');
-    if (alarmEl && settings.dp > 26 && jetRunning) {
-      alarmEl.classList.add('visible');
-    }
-  } catch(e) {}
-}
-
-function silenceAlarm() {
-  try {
-    var alarmEl = document.getElementById('alarm-box');
-    if (alarmEl) alarmEl.classList.remove('visible');
-  } catch(e) {}
-}
-
-// SCENARIOS
-const scenarios = {
+/* ================= SCENARIOS ================= */
+var scenarios = {
   co2high: {
-    title: "Rising TcCO₂ After Initial Scan",
-    tag: "CO₂ MANAGEMENT",
+    title: 'Rising TcCO₂ After Initial Scan', tag: 'CO₂ MANAGEMENT', tagClass: 'tag-caution', icon: 'co2', sim: 'highco2',
+    desc: 'TcCO₂ climbs from 42 to 58 mmHg. The initial scan is complete. Who do you call first?',
     questions: [
       {
-        q: "⚠ Note: Settings should NOT be changed after the initial scan without Faculty discussion.\n\nTcCO₂ has risen from 42 to 58 mmHg over 10 minutes. The initial scan is complete. What is your FIRST step?",
-        options: ["Increase Driving Pressure by 1–2 psi immediately", "Decrease Frequency from 150 to 140 cpm", "Contact Anesthesia Faculty and discuss with IR Faculty before making any changes", "Switch back to conventional ventilation immediately"],
+        note: 'Settings should NOT be changed after the initial scan without Faculty discussion.',
+        q: 'TcCO₂ has risen from 42 to 58 mmHg over 10 minutes. The initial scan is complete. What is your FIRST step?',
+        options: ['Increase Driving Pressure by 1–2 psi immediately', 'Decrease Frequency from 150 to 140 cpm', 'Contact Anesthesia Faculty and discuss with IR Faculty before making any changes', 'Switch back to conventional ventilation immediately'],
         correct: 2,
-        feedback: "Correct. Because the initial scan has already been completed, NO settings should be changed without first discussing with the Anesthesia Faculty and IR Faculty. The team will assess whether permissive hypercapnia (TcCO₂ up to 60 mmHg) is acceptable to continue the case, or whether a change is warranted. Independent adjustments after the initial scan are not appropriate."
+        takeaway: 'After the initial scan, talk to the Anesthesia and IR Faculty before changing any setting.',
+        feedback: 'Because the initial scan has already been completed, NO settings should be changed without first discussing with the Anesthesia Faculty and IR Faculty. The team will assess whether permissive hypercapnia (TcCO₂ up to 60 mmHg) is acceptable to continue the case, or whether a change is warranted. Independent adjustments after the initial scan are not appropriate.'
       },
       {
-        q: "After Faculty discussion, the team agrees TcCO₂ of 58 mmHg is acceptable and the procedure continues. What range is considered 'permissive' during HFJV?",
-        options: ["TcCO₂ must be kept at exactly 40 mmHg at all times", "TcCO₂ 25–60 mmHg is generally safe during the jet phase", "Any TcCO₂ above 50 mmHg requires immediate switch to conventional vent", "TcCO₂ monitoring is optional — ETCO₂ is sufficient during HFJV"],
+        q: 'After Faculty discussion, the team agrees TcCO₂ of 58 mmHg is acceptable and the procedure continues. What range is considered "permissive" during HFJV?',
+        options: ['TcCO₂ must be kept at exactly 40 mmHg at all times', 'TcCO₂ 25–60 mmHg is generally safe during the jet phase', 'Any TcCO₂ above 50 mmHg requires immediate switch to conventional vent', 'TcCO₂ monitoring is optional; ETCO₂ is sufficient during HFJV'],
         correct: 1,
-        feedback: "Correct. The protocol states TcCO₂ 25–60 mmHg is generally safe during HFJV, because values normalize readily after returning to conventional ventilation at the end of the case. This permissive range allows the procedure to continue without interruption as long as the team has discussed and agreed."
+        takeaway: 'TcCO₂ 25–60 mmHg is permissive during HFJV. It normalizes on conventional ventilation.',
+        feedback: 'The protocol states TcCO₂ 25–60 mmHg is generally safe during HFJV, because values normalize readily after returning to conventional ventilation at the end of the case. This permissive range allows the procedure to continue without interruption as long as the team has discussed and agreed.'
       }
     ]
   },
   alarm: {
-    title: "PP/PIP High Alarm",
-    tag: "ALARM",
+    title: 'PP/PIP High Alarm Fires', tag: 'ALARM', tagClass: 'tag-urgent', icon: 'alarm', sim: 'pip',
+    desc: 'Mid-case the PIP alarm sounds. SpO₂ is 97%. What is your systematic approach?',
     questions: [
       {
-        q: "The PP/PIP alarm fires mid-case. SpO₂ is 97%, TcCO₂ is 48. What is your FIRST check?",
-        options: ["Immediately switch to conventional ventilation", "Inspect jet tubing for kinks or obstruction", "Increase driving pressure to push through the obstruction", "Call the Monsoon rep immediately"],
+        q: 'The PP/PIP alarm fires mid-case. SpO₂ is 97%, TcCO₂ is 48. What is your FIRST check?',
+        options: ['Immediately switch to conventional ventilation', 'Inspect jet tubing for kinks or obstruction', 'Increase driving pressure to push through the obstruction', 'Call the Monsoon rep immediately'],
         correct: 1,
-        feedback: "Correct. PP/PIP high DDx: kinked/obstructed jet tubing, ETT/airway obstruction (mucus), inadequate paralysis, inappropriate jet settings, or closed APL valve. Always start with the physical check of tubing and connections — it's the most common and most fixable cause."
+        takeaway: 'Start with the physical check: tubing kinks and connections.',
+        feedback: 'PP/PIP high differential: kinked/obstructed jet tubing, ETT/airway obstruction (mucus), inadequate paralysis, inappropriate jet settings, or a closed APL valve. Always start with the physical check of tubing and connections. It is the most common and most fixable cause.'
       },
       {
-        q: "Tubing is patent. You check the ETT — it seems fine. What do you assess next?",
-        options: ["Verify adequate paralysis with TOF monitor", "Turn off the alarm and continue", "Increase climatization to 5", "Adjust the PP alarm threshold to 30"],
+        q: 'Tubing is patent. You check the ETT and it seems fine. What do you assess next?',
+        options: ['Verify adequate paralysis with TOF monitor', 'Turn off the alarm and continue', 'Increase climatization to 5', 'Adjust the PP alarm threshold to 30'],
         correct: 0,
-        feedback: "Correct. Inadequate paralysis is a key cause of high airway pressures during HFJV. Patient movement or active breathing against the jet can spike pressures. Target ≤1/4 TOF. If paralysis is inadequate, redose neuromuscular blocker."
+        takeaway: 'Next check paralysis: target ≤1/4 TOF, and redose if it is inadequate.',
+        feedback: 'Inadequate paralysis is a key cause of high airway pressures during HFJV. Patient movement or active breathing against the jet can spike pressures. Target ≤1/4 TOF. If paralysis is inadequate, redose the neuromuscular blocker.'
       },
       {
-        q: "APL valve was partially closed. You open it fully and the alarm clears. What must you do next?",
-        options: ["Nothing — problem solved", "Silence the alarm, then push 'Alarm Reset' on the machine", "Restart the Monsoon machine completely", "Switch to TIVA and avoid further jet use"],
+        q: 'The APL valve was partially closed. You open it fully and the alarm clears. What must you do next?',
+        options: ['Nothing; problem solved', 'Silence the alarm, then push "Alarm Reset" on the machine', 'Restart the Monsoon machine completely', 'Switch to TIVA and avoid further jet use'],
         correct: 1,
-        feedback: "Correct. Per protocol: after troubleshooting, you must silence the alarm AND then push 'Alarm Reset.' Simply silencing the alarm is not sufficient — the Alarm Reset confirms to the machine that the condition has been addressed."
+        takeaway: 'Silence the alarm, then press Alarm Reset.',
+        feedback: 'Per protocol: after troubleshooting, you must silence the alarm AND then push "Alarm Reset." Simply silencing the alarm is not sufficient. The Alarm Reset confirms to the machine that the condition has been addressed.'
       }
     ]
   },
   hypoxia: {
-    title: "SpO₂ Drops to 88%",
-    tag: "HYPOXIA",
+    title: 'SpO₂ Drops to 88%', tag: 'HYPOXIA', tagClass: 'tag-urgent', icon: 'hypoxia', sim: 'desat',
+    desc: 'Mid-case, SpO₂ drops to 88% on FiO₂ 50%. The initial scan is complete. What can you do?',
     questions: [
       {
-        q: "SpO₂ drops to 88% on FiO₂ 50%. Chest is moving and jet appears to be running normally. First intervention?",
-        options: ["Increase FiO₂", "Immediately switch to conventional ventilation", "Decrease driving pressure", "Increase frequency to 160"],
+        q: 'SpO₂ drops to 88% on FiO₂ 50%. The chest is moving and the jet appears to be running normally. First intervention?',
+        options: ['Increase FiO₂', 'Immediately switch to conventional ventilation', 'Decrease driving pressure', 'Increase frequency to 160'],
         correct: 0,
-        feedback: "Correct. Increasing FiO₂ is the safest immediate step because it does not change the ventilator mechanics or disrupt the ablation. Switching to conventional ventilation or performing a recruitment maneuver would interrupt the procedure — those decisions require Faculty discussion. Decreasing DP would worsen ventilation and is not appropriate for hypoxia."
+        takeaway: 'Raise FiO₂ first. It doesn\'t change the jet mechanics or disturb the ablation.',
+        feedback: 'Increasing FiO₂ is the safest immediate step because it does not change the ventilator mechanics or disrupt the ablation. Switching to conventional ventilation or performing a recruitment maneuver would interrupt the procedure, and those decisions require Faculty discussion. Decreasing DP would worsen ventilation and is not appropriate for hypoxia.'
       },
       {
-        q: "⚠ Note: The initial scan has been completed. FiO₂ is now 80% and SpO₂ is 91%. What is the appropriate next step?",
-        options: ["Increase inspiratory time (IT) by 5% and increase DP by 2 psi", "Confirm bilateral breath sounds and suction the ETT", "Perform a recruitment maneuver and take over ventilation", "Switch to SIMV at high tidal volume"],
+        note: 'The initial scan has been completed.',
+        q: 'FiO₂ is now 80% and SpO₂ is 91%. What is the appropriate next step?',
+        options: ['Increase inspiratory time (IT) by 5% and increase DP by 2 psi', 'Confirm bilateral breath sounds and suction the ETT', 'Perform a recruitment maneuver and take over ventilation', 'Switch to SIMV at high tidal volume'],
         correct: 1,
-        feedback: "Correct. Since the initial scan is done, changing ventilator settings (IT, DP) requires Faculty discussion first. The immediate safe steps are: (1) confirm bilateral breath sounds to rule out a mechanical issue or mainstem intubation, and (2) suction the ETT to clear any mucus obstruction. Recruitment maneuvers and taking over ventilation would interrupt the procedure and also represent significant setting changes — those decisions require Faculty input."
+        takeaway: 'After the scan, check breath sounds and suction before any setting change.',
+        feedback: 'Since the initial scan is done, changing ventilator settings (IT, DP) requires Faculty discussion first. The immediate safe steps are: (1) confirm bilateral breath sounds to rule out a mechanical issue or mainstem intubation, and (2) suction the ETT to clear any mucus obstruction. Recruitment maneuvers and taking over ventilation would interrupt the procedure and also represent significant setting changes, so those decisions require Faculty input.'
       }
     ]
   },
   initiate: {
-    title: "When to Start the Jet",
-    tag: "INITIATION",
+    title: 'When Can You Start the Jet?', tag: 'INITIATION', tagClass: 'tag-routine', icon: 'initiate',
+    desc: 'Patient is induced, intubated, on TIVA. TcCO₂ is calibrating. When do you initiate jet ventilation?',
     questions: [
       {
-        q: "Patient is intubated. You're on TIVA. TcCO₂ probe is attached and reading 44 mmHg (stable). The patient is HEAD to scanner. When can you initiate jet?",
-        options: ["Immediately — TcCO₂ is stable", "After the gantry (donut) is brought in to the patient", "Only after the IR physician is in the room", "After 10 minutes of TcCO₂ monitoring"],
+        q: 'The patient is intubated on TIVA. The TcCO₂ probe is attached and reading 44 mmHg (stable). The patient is HEAD to scanner. When can you initiate the jet?',
+        options: ['Immediately, since TcCO₂ is stable', 'After the gantry (donut) is brought in to the patient', 'Only after the IR physician is in the room', 'After 10 minutes of TcCO₂ monitoring'],
         correct: 1,
-        feedback: "Correct. For head-to-scanner orientation, you must wait until the gantry is brought in. This is because the jet ventilator is positioned behind the gantry, and you need to be able to connect and adjust settings with the machine in its final position. For feet-to-scanner, you can initiate jet immediately."
+        takeaway: 'Head to scanner: wait for the gantry. Feet to scanner: start right away.',
+        feedback: 'For head-to-scanner orientation, you must wait until the gantry is brought in. The jet ventilator is positioned behind the gantry, and you need to be able to connect and adjust settings with the machine in its final position. For feet-to-scanner, you can initiate the jet immediately.'
       },
       {
-        q: "You're about to switch from conventional to jet ventilation. What must you do to the anesthesia machine before starting the jet?",
-        options: ["Turn the machine off completely", "Set to Manual mode with APL valve OPEN, reduce O₂ flow to 1 LPM, turn vaporizer off", "Increase APL pressure to 30 cmH₂O to prevent backflow", "Set to SIMV mode at low rate"],
+        q: 'You\'re about to switch from conventional to jet ventilation. What must you do to the anesthesia machine before starting the jet?',
+        options: ['Turn the machine off completely', 'Set to Manual mode with APL valve OPEN, reduce O₂ flow to 1 LPM, turn vaporizer off', 'Increase APL pressure to 30 cmH₂O to prevent backflow', 'Set to SIMV mode at low rate'],
         correct: 1,
-        feedback: "Correct. The ventilator must be set to Manual with APL fully open — this prevents buildup of backpressure from the jet. O₂ flow is reduced to 1 LPM (background flow only). The vaporizer is turned off since TIVA is in use. Failing to open the APL is a common cause of PP/PIP alarms."
+        takeaway: 'Anesthesia machine: Manual, APL fully open, O₂ 1 LPM, vaporizer off.',
+        feedback: 'The ventilator must be set to Manual with the APL fully open. This prevents back-pressure from the jet. O₂ flow is reduced to 1 LPM (background flow only). The vaporizer is turned off since TIVA is in use. Failing to open the APL is a common cause of PP/PIP alarms.'
       },
       {
-        q: "After connecting to the jet, you need to finalize settings. What is the key goal before the INITIAL scan?",
-        options: ["Achieve TcCO₂ of exactly 40 mmHg", "Stabilize TcCO₂ so it fluctuates less than every 30 seconds", "Confirm SpO₂ is 100%", "Set frequency to 200 cpm for maximum motion reduction"],
+        q: 'After connecting to the jet, you need to finalize settings. What is the key goal before the INITIAL scan?',
+        options: ['Achieve TcCO₂ of exactly 40 mmHg', 'Stabilize TcCO₂ so it is no longer fluctuating', 'Confirm SpO₂ is 100%', 'Set frequency to 200 cpm for maximum motion reduction'],
         correct: 1,
-        feedback: "Correct. The protocol emphasizes stabilizing TcCO₂ BEFORE the initial scan. Once the scan is acquired, you do not change settings without discussing with the anesthesiologist and IR physician. Stability (fluctuation <30 sec) is the goal — not a specific absolute value, as permissive hypercapnia is acceptable."
+        takeaway: 'Before the initial scan, the goal is a stable TcCO₂, not a specific number.',
+        feedback: 'The protocol emphasizes stabilizing TcCO₂ BEFORE the initial scan. Once the scan is acquired, you do not change settings without discussing with the anesthesiologist and IR physician. Stability is the goal, not a specific absolute value, because permissive hypercapnia is acceptable.'
       }
     ]
   },
   end: {
-    title: "End of Case Transition",
-    tag: "END OF CASE",
+    title: 'Transitioning Back to Conventional Vent', tag: 'END OF CASE', tagClass: 'tag-routine', icon: 'end',
+    desc: 'Ablation is complete. IR says the jet is no longer needed. Walk through your end-of-case steps.',
     questions: [
       {
-        q: "The ablation is complete. IR says jet is no longer needed. What is your first step?",
-        options: ["Extubate the patient immediately", "Switch to conventional ventilation", "Remove the Sentec probe", "Turn off the Monsoon machine first"],
+        q: 'The ablation is complete. IR says the jet is no longer needed. What is your first step?',
+        options: ['Extubate the patient immediately', 'Switch to conventional ventilation', 'Remove the Sentec probe', 'Turn off the Monsoon machine first'],
         correct: 1,
-        feedback: "Correct. Switch to conventional ventilation first. The swivel adapter can remain in place — the protocol notes you can return to standard inhalational or mechanical ventilation at any time with the swivel adapter in place."
+        takeaway: 'Switch back to conventional ventilation first. The swivel adapter can stay.',
+        feedback: 'Switch to conventional ventilation first. The swivel adapter can remain in place: you can return to standard inhalational or mechanical ventilation at any time with the swivel adapter in place.'
       },
       {
-        q: "You've returned to conventional ventilation. TcCO₂ is 58 mmHg. What do you do?",
-        options: ["Leave it — it will normalize on its own", "Hyperventilate as necessary to achieve baseline ETCO₂", "Administer sodium bicarbonate IV", "Recheck TOF before doing anything"],
+        q: 'You\'ve returned to conventional ventilation. TcCO₂ is 58 mmHg. What do you do?',
+        options: ['Leave it; it will normalize on its own', 'Hyperventilate as necessary to achieve baseline ETCO₂', 'Administer sodium bicarbonate IV', 'Recheck TOF before doing anything'],
         correct: 1,
-        feedback: "Correct. After switching back to conventional ventilation, hyper- or hypoventilate as necessary to achieve baseline ETCO₂. Permissive hypercapnia during the jet phase is acceptable precisely because it normalizes readily when conventional ventilation resumes."
+        takeaway: 'Hyper- or hypoventilate to bring ETCO₂ back to baseline.',
+        feedback: 'After switching back to conventional ventilation, hyper- or hypoventilate as necessary to achieve baseline ETCO₂. Permissive hypercapnia during the jet phase is acceptable precisely because it normalizes readily when conventional ventilation resumes.'
       },
       {
-        q: "What is the final airway maneuver before completing the case?",
-        options: ["Suction the ETT", "Perform 1–2 recruitment maneuvers", "Deflate and re-inflate the ETT cuff", "Administer albuterol"],
+        q: 'What is the final airway maneuver before completing the case?',
+        options: ['Suction the ETT', 'Perform 1–2 recruitment maneuvers', 'Deflate and re-inflate the ETT cuff', 'Administer albuterol'],
         correct: 1,
-        feedback: "Correct. Perform 1–2 recruitment maneuvers to treat atelectasis before completing the case. HFJV delivers small tidal volumes without typical sigh breaths, so atelectasis accumulation is expected. Recruitment restores lung volumes before extubation."
+        takeaway: 'Finish with 1–2 recruitment maneuvers for atelectasis.',
+        feedback: 'Perform 1–2 recruitment maneuvers to treat atelectasis before completing the case. HFJV delivers small tidal volumes without typical sigh breaths, so atelectasis is expected. Recruitment restores lung volumes before extubation.'
       }
     ]
   }
 };
 
-let currentScenario = null;
-let currentQ = 0;
-let score = 0;
-let answered = false;
+var bestScores = load('scores', {});
+var current = null; // { key, q, score, order, answered }
 
-function loadScenario(key) {
-  currentScenario = scenarios[key];
-  currentQ = 0;
-  score = 0;
-  answered = false;
-  document.getElementById('scenario-list').style.display = 'none';
-  document.getElementById('scenario-active').classList.add('visible');
-  renderQuestion();
-}
-
-function closeScenario() {
-  document.getElementById('scenario-list').style.display = 'block';
-  document.getElementById('scenario-active').classList.remove('visible');
-  currentScenario = null;
-}
-
-function renderQuestion() {
-  const s = currentScenario;
-  const q = s.questions[currentQ];
-  const total = s.questions.length;
-  const dots = s.questions.map((_,i) => {
-    let cls = 'step-dot';
-    if (i < currentQ) cls += ' done';
-    if (i === currentQ) cls += ' active';
-    return `<div class="${cls}"></div>`;
+function renderScenarioGrid() {
+  $('scenario-grid').innerHTML = Object.keys(scenarios).map(function (k) {
+    var s = scenarios[k], best = bestScores[k];
+    return '<button class="scenario-card" data-scenario="' + k + '">' +
+      '<img src="assets/icon-' + s.icon + '.png" alt="" width="56" height="56">' +
+      '<span><span class="scenario-tag ' + s.tagClass + '">' + s.tag + '</span>' +
+      '<span class="scenario-title" style="display:block;">' + esc(s.title) + '</span>' +
+      '<span class="scenario-desc" style="display:block;">' + esc(s.desc) + '</span>' +
+      (best != null ? '<span class="scenario-best" style="display:block;">Best: ' + best + '/' + s.questions.length + '</span>' : '') +
+      '</span></button>';
   }).join('');
-
-  document.getElementById('scenario-score-display').innerText = `${currentQ+1} / ${total}`;
-
-  document.getElementById('scenario-content').innerHTML = `
-    <div class="card">
-      <div class="card-title" style="margin-bottom:8px;">
-        <div class="icon icon-blue">🩺</div>
-        <div>${s.title}</div>
-      </div>
-      <div class="step-indicator">${dots}</div>
-      <div class="quiz-question">${q.q}</div>
-      <div class="quiz-options">
-        ${q.options.map((opt, i) => `<button class="quiz-option" onclick="answerQ(${i})" id="opt-${i}">${String.fromCharCode(65+i)}. ${opt}</button>`).join('')}
-      </div>
-      <div id="feedback" class="feedback-box"></div>
-      <button class="next-btn" id="next-btn" onclick="nextQ()" disabled>${currentQ < total-1 ? 'Next Question →' : 'See Results →'}</button>
-    </div>
-  `;
-  answered = false;
 }
+$('scenario-grid').addEventListener('click', function (e) {
+  var b = e.target.closest('[data-scenario]');
+  if (b) loadScenario(b.dataset.scenario);
+});
+$('scenario-back').addEventListener('click', closeScenario);
 
-function answerQ(idx) {
-  if (answered) return;
-  answered = true;
-  const q = currentScenario.questions[currentQ];
-  const opts = document.querySelectorAll('.quiz-option');
-  opts.forEach((o, i) => {
+function shuffled(n) {
+  var a = []; for (var i = 0; i < n; i++) a.push(i);
+  for (var j = n - 1; j > 0; j--) { var r = Math.floor(Math.random() * (j + 1)); var t = a[j]; a[j] = a[r]; a[r] = t; }
+  return a;
+}
+function loadScenario(key) {
+  current = { key: key, q: 0, score: 0 };
+  $('scenario-list').hidden = true;
+  $('scenario-active').hidden = false;
+  renderQuestion();
+  window.scrollTo(0, 0);
+}
+function closeScenario() {
+  current = null;
+  $('scenario-list').hidden = false;
+  $('scenario-active').hidden = true;
+  renderScenarioGrid();
+}
+function renderQuestion() {
+  var s = scenarios[current.key], q = s.questions[current.q], total = s.questions.length;
+  current.order = shuffled(q.options.length);
+  current.answered = false;
+  var dots = s.questions.map(function (_, i) {
+    return '<div class="step-dot' + (i < current.q ? ' done' : '') + (i === current.q ? ' active' : '') + '"></div>';
+  }).join('');
+  $('scenario-count').textContent = 'Question ' + (current.q + 1) + ' of ' + total;
+  $('scenario-content').innerHTML =
+    '<div class="card">' +
+      '<h2 class="card-title" style="margin-bottom:8px;"><img src="assets/icon-' + s.icon + '.png" alt="" width="32" height="32" style="border-radius:50%;"> ' + esc(s.title) + '</h2>' +
+      '<div class="step-indicator">' + dots + '</div>' +
+      (q.note ? '<div class="quiz-note">🔒 ' + esc(q.note) + '</div>' : '') +
+      '<div class="quiz-question">' + esc(q.q) + '</div>' +
+      '<div class="quiz-options">' + current.order.map(function (orig, i) {
+        return '<button class="quiz-option" data-orig="' + orig + '">' + String.fromCharCode(65 + i) + '. ' + esc(q.options[orig]) + '</button>';
+      }).join('') + '</div>' +
+      '<div id="feedback" aria-live="polite"></div>' +
+      '<button class="btn" id="next-btn" hidden>' + (current.q < total - 1 ? 'Next question →' : 'See results →') + '</button>' +
+    '</div>';
+  glossify($('scenario-content'));
+}
+$('scenario-content').addEventListener('click', function (e) {
+  var opt = e.target.closest('.quiz-option');
+  if (opt && current && !current.answered) return answer(+opt.dataset.orig);
+  if (e.target.closest('#next-btn')) return nextQuestion();
+  var retry = e.target.closest('[data-retry]');
+  if (retry) return loadScenario(retry.dataset.retry);
+  var sim = e.target.closest('[data-sim]');
+  if (sim) { go('simulator'); resetSim(); startEvent(sim.dataset.sim); }
+});
+function answer(orig) {
+  current.answered = true;
+  var q = scenarios[current.key].questions[current.q], right = orig === q.correct;
+  if (right) current.score++;
+  document.querySelectorAll('.quiz-option').forEach(function (o) {
+    var i = +o.dataset.orig;
     if (i === q.correct) o.classList.add('correct');
-    else if (i === idx && idx !== q.correct) o.classList.add('wrong');
-    o.onclick = null;
+    else if (i === orig) o.classList.add('wrong');
+    o.disabled = true;
   });
-  const fb = document.getElementById('feedback');
-  if (idx === q.correct) {
-    score++;
-    fb.className = 'feedback-box correct-fb';
-    fb.innerText = '✓ ' + q.feedback;
-  } else {
-    fb.className = 'feedback-box wrong-fb';
-    fb.innerText = '✗ ' + q.feedback;
-  }
-  document.getElementById('next-btn').disabled = false;
+  var fb = $('feedback');
+  fb.className = 'feedback-box ' + (right ? 'correct-fb' : 'wrong-fb');
+  fb.innerHTML = '<strong>' + (right ? '✓ Correct. ' : '✗ Not quite. ') + esc(q.takeaway) + '</strong>' +
+    '<details><summary>Why?</summary><p>' + esc(q.feedback) + '</p></details>';
+  glossify(fb);
+  $('next-btn').hidden = false;
+  $('next-btn').focus();
 }
-
-function nextQ() {
-  currentQ++;
-  if (currentQ >= currentScenario.questions.length) {
-    showResults();
-  } else {
-    renderQuestion();
-  }
+function nextQuestion() {
+  current.q++;
+  if (current.q >= scenarios[current.key].questions.length) showResults();
+  else renderQuestion();
 }
-
 function showResults() {
-  const total = currentScenario.questions.length;
-  const pct = Math.round((score / total) * 100);
-  const grade = pct === 100 ? '🏆 Excellent' : pct >= 67 ? '✅ Good' : '📚 Review Protocol';
-  document.getElementById('scenario-content').innerHTML = `
-    <div class="score-display" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,0.06);">
-      <div class="score-num" style="color:var(--accent);">${score}/${total}</div>
-      <div class="score-label" style="color:var(--muted);">${grade}</div>
-      <p style="color:var(--muted);margin-top:12px;font-size:14px;">
-        ${pct === 100 ? 'Perfect score — you know this protocol.' : pct >= 67 ? 'Good work. Review any missed questions.' : 'Review the protocol before your next case.'}
-      </p>
-      <div style="margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-        <button class="next-btn" onclick="loadScenario('${Object.keys(scenarios).find(k=>scenarios[k]===currentScenario)}')">Retry This Scenario</button>
-        <button class="machine-btn btn-reset" onclick="closeScenario()" style="padding:11px 24px;border-radius:8px;">← All Scenarios</button>
-      </div>
-    </div>
-  `;
+  var s = scenarios[current.key], total = s.questions.length, sc = current.score, pct = sc / total;
+  if (bestScores[current.key] == null || sc > bestScores[current.key]) { bestScores[current.key] = sc; save('scores', bestScores); }
+  $('scenario-count').textContent = '';
+  $('scenario-content').innerHTML =
+    '<div class="card score-display">' +
+      '<div class="score-num">' + sc + '/' + total + '</div>' +
+      '<div class="score-label">' + (pct === 1 ? '🏆 Excellent' : pct >= 0.67 ? '✅ Good' : '📚 Review the protocol') + '</div>' +
+      '<p style="color:var(--muted);margin-top:12px;font-size:14px;">' +
+        (pct === 1 ? 'Perfect score. You know this protocol.' : pct >= 0.67 ? 'Good work. Review any missed questions.' : 'Review the Quick Reference before your next case.') + '</p>' +
+      '<div class="row" style="margin-top:22px;justify-content:center;">' +
+        '<button class="btn" data-retry="' + current.key + '">Retry this scenario</button>' +
+        (s.sim ? '<button class="btn btn-ghost" data-sim="' + s.sim + '">Practice it in the simulator →</button>' : '') +
+        '<button class="btn btn-ghost" id="results-back">← All scenarios</button>' +
+      '</div></div>';
+  $('results-back').addEventListener('click', closeScenario);
 }
+
+/* ================= REFERENCE ================= */
+$('settings-table').innerHTML =
+  '<tr><th>PARAMETER</th><th>DEFAULT</th><th>RANGE / NOTE</th></tr>' +
+  SETTINGS.map(function (s) {
+    return '<tr><td>' + s.name + '</td><td class="val-accent">' + s.def + ' ' + s.unit + '</td><td class="val-range">' + s.note + '</td></tr>';
+  }).join('') +
+  OTHER_SETTINGS.map(function (r) {
+    return '<tr><td>' + r[0] + '</td><td class="val-accent">' + r[1] + '</td><td class="val-range">' + r[2] + '</td></tr>';
+  }).join('');
+$('gloss-list').innerHTML = GLOSSARY.map(function (g) {
+  return '<div><dt>' + g[0] + '</dt><dd>' + g[1] + '</dd></div>';
+}).join('');
+$('btn-print').addEventListener('click', function () { window.print(); });
+
+/* ================= GLOSSARY TOOLTIPS ================= */
+// Wraps the first use of each term in every card so it can be tapped for a definition.
+var GLOSS_MAP = {};
+GLOSSARY.forEach(function (g) { GLOSS_MAP[g[0]] = g[1]; });
+var TERM_RE = new RegExp('(^|[^A-Za-z0-9])(' + GLOSSARY.map(function (g) {
+  return g[0].replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}).sort(function (a, b) { return b.length - a.length; }).join('|') + ')(?![A-Za-z0-9₂])');
+var SKIP = 'button, svg, abbr, script, style, th, .knob-label, .no-gloss, .card-title, .section-title, .tl-phase, .gloss-list, dialog, .mon, .scenario-tag';
+
+function glossify(root) {
+  if (!root) return;
+  var scopes = root.matches && root.matches('.card, .golden, .feedback-box, .orient-note') ? [root] : [];
+  scopes = scopes.concat([].slice.call(root.querySelectorAll('.card, .golden, .feedback-box, .orient-note')));
+  scopes.forEach(function (scope) {
+    if (scope.dataset.glossed) return;
+    scope.dataset.glossed = '1';
+    var seen = {};
+    scope.querySelectorAll('abbr.term').forEach(function (a) { seen[a.dataset.term] = true; });
+    var walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (n) {
+        return n.parentElement && !n.parentElement.closest(SKIP) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      }
+    });
+    var nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(function (node) {
+      var text = node.nodeValue, m, offset = 0, parent = node.parentNode, frag = null;
+      var re = new RegExp(TERM_RE.source, 'g');
+      while ((m = re.exec(text))) {
+        var term = m[2];
+        if (seen[term]) { re.lastIndex = m.index + m[0].length; continue; }
+        seen[term] = true;
+        frag = frag || document.createDocumentFragment();
+        var start = m.index + m[1].length;
+        frag.appendChild(document.createTextNode(text.slice(offset, start)));
+        var ab = document.createElement('abbr');
+        ab.className = 'term'; ab.tabIndex = 0; ab.dataset.term = term; ab.textContent = term;
+        frag.appendChild(ab);
+        offset = start + term.length;
+      }
+      if (frag) {
+        frag.appendChild(document.createTextNode(text.slice(offset)));
+        parent.replaceChild(frag, node);
+      }
+    });
+  });
+}
+
+var pop = $('gloss-pop');
+function showGloss(el) {
+  var term = el.dataset.term;
+  pop.innerHTML = '<strong>' + term + '</strong> ' + GLOSS_MAP[term];
+  pop.hidden = false;
+  var r = el.getBoundingClientRect();
+  var left = Math.max(8, Math.min(r.left + window.scrollX, window.scrollX + document.documentElement.clientWidth - pop.offsetWidth - 8));
+  pop.style.left = left + 'px';
+  pop.style.top = (r.bottom + window.scrollY + 6) + 'px';
+}
+function hideGloss() { pop.hidden = true; }
+document.addEventListener('click', function (e) {
+  var t = e.target.closest('abbr.term');
+  if (t) { e.preventDefault(); e.stopPropagation(); showGloss(t); return; }
+  if (!e.target.closest('#gloss-pop')) hideGloss();
+}, true);
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') hideGloss();
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('abbr.term')) { e.preventDefault(); showGloss(e.target); }
+});
+window.addEventListener('resize', hideGloss);
+
+/* ================= INIT ================= */
+S = freshState();
+renderKnobs();
+renderEvents();
+renderSim();
+renderSetup();
+renderScenarioGrid();
+selectOrient('head');
+glossify(document.body);
+showSection(location.hash.slice(1) || 'overview');
 </script>
 </body>
 </html>
-
-</body></html>
