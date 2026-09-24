@@ -24,6 +24,15 @@ Tap any dotted-underlined abbreviation (DP, TOF, APL…) to see its definition.
 
 You can link straight to a tab, e.g. `…/JetVentilation/#simulator` or `#reference`.
 
+## Install it like an app
+
+Open the live site on your phone, then:
+
+- **iPhone (Safari):** tap Share → **Add to Home Screen**
+- **Android (Chrome):** tap ⋮ → **Add to Home screen** (or **Install app**)
+
+It gets the lung icon and opens full-screen without the browser bars.
+
 ## Editing the content
 
 Everything lives in one file, `index.html`. The protocol content is kept in data blocks near the top of the `<script>` section, so each fact is written once:
@@ -47,5 +56,6 @@ All images are in `assets/`:
 | `ett-adapter.jpg` | Labeled ETT + swivel adapter illustration (Setup, step 2) |
 | `ett-adapter-photo.jpg` | Real photo of the assembled tube (Setup, step 2) |
 | `icon-*.png` | Scenario card icons |
+| `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `favicon-32.png` | Home-screen app icon and browser tab icon |
 
 The illustrations were generated with Google Gemini. Labels are added in the page rather than in the images, so they stay accurate.
