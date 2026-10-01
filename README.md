@@ -14,9 +14,9 @@ Anesthesia residents, CRNAs, nurses and anesthesia techs who set up or run jet v
 
 | Tab | What you do there |
 |---|---|
-| **Overview** | The golden rule, HFJV in 30 seconds, a one-screen case timeline, and how patient orientation changes the room setup |
+| **Overview** | Critical points, what HFJV is, a one-screen case timeline, and how patient orientation changes the room setup |
 | **Setup** | A step-by-step checklist (5 phases). Ticks are saved on your device |
-| **Simulator** | Run the jet, stabilize TcCO₂, take the initial scan (which locks settings), then practice events: rising CO₂, desaturation, and a PP/PIP alarm with a hidden cause to find |
+| **Simulator** | Run the jet, stabilize TcCO₂, take the initial scan (which finalizes settings), then practice events: rising CO₂, desaturation, and a PP/PIP alarm with a hidden cause to find |
 | **Scenarios** | Short multiple-choice decision drills with explanations. Answers are shuffled every time |
 | **Quick Reference** | Settings, CO₂ and oxygen flowcharts, alarm troubleshooting, contacts, documentation, end-of-case steps, glossary. Printable |
 
