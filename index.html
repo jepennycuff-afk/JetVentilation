@@ -130,16 +130,17 @@
     padding: 10px 16px; font-size: 13px; color: var(--warn); margin-bottom: 20px;
   }
 
-  /* GOLDEN RULE */
-  .golden {
+  /* CRITICAL POINTS */
+  .critical {
     display: flex; gap: 14px; align-items: flex-start;
     background: #fff7ed; border: 2px solid #fdba74; border-radius: 14px;
     padding: 16px 18px; margin-bottom: 20px;
   }
-  .golden-icon { font-size: 26px; line-height: 1; }
-  .golden-title { font-family: var(--display); font-weight: 800; font-size: 15px; color: #9a3412; margin-bottom: 4px; }
-  .golden ol { font-size: 14px; line-height: 1.6; padding-left: 18px; color: #431407; }
-  .golden .golden-foot { font-size: 13px; color: #7c2d12; margin-top: 6px; }
+  .critical-icon { font-size: 26px; line-height: 1; }
+  .critical-title { font-family: var(--display); font-weight: 800; font-size: 15px; color: #9a3412; margin-bottom: 4px; }
+  .critical ol { font-size: 14px; line-height: 1.6; padding-left: 18px; color: #431407; }
+  .critical ol > li + li { margin-top: 4px; }
+  .critical ul { list-style: disc; padding-left: 18px; margin-top: 4px; font-size: 13.5px; }
 
   /* BUTTONS */
   .btn {
@@ -459,19 +460,19 @@
 <!-- ===== OVERVIEW ===== -->
 <section id="overview" class="section main" role="tabpanel">
   <h1 class="section-title">High-Frequency Jet Ventilation</h1>
-  <p class="section-sub">Everything you need for a jet case in IR, in the order you'll need it. Tap any <abbr class="term" data-term="TcCO₂" tabindex="0">dotted term</abbr> for a definition.</p>
+  <p class="section-sub">An overview of a jet ventilation case in IR, in procedural order. Select any <abbr class="term" data-term="TcCO₂" tabindex="0">dotted term</abbr> for a definition.</p>
 
   <div class="info-pill">⚠️ Training simulation only. Always follow your institution's live protocol.</div>
 
-  <div class="golden golden-rule"></div>
+  <div class="critical critical-rule"></div>
 
   <div class="card">
-    <h2 class="card-title"><span class="icon icon-blue">💡</span> HFJV in 30 seconds</h2>
+    <h2 class="card-title"><span class="icon icon-blue">💡</span> What is HFJV?</h2>
     <ul class="bullets" style="margin-bottom:16px;">
-      <li><strong>Tiny breaths, very fast:</strong> about 150 small pulses a minute instead of ~12 big breaths.</li>
-      <li><strong>The target barely moves:</strong> lungs, diaphragm and liver stay nearly still, so IR can place needles <strong>without breath holds</strong>.</li>
-      <li><strong>Why it matters:</strong> more accurate ablations and less radiation time.</li>
-      <li><strong>CO₂ is watched through the skin</strong> (TcCO₂), because ETCO₂ isn't reliable on the jet.</li>
+      <li><strong>Small, rapid breaths:</strong> approximately 150 small pulses per minute rather than ~12 large breaths.</li>
+      <li><strong>Minimal target movement:</strong> the lungs, diaphragm and liver remain nearly still, allowing IR to place needles <strong>without breath holds</strong>.</li>
+      <li><strong>Benefit:</strong> more accurate ablations and reduced radiation time.</li>
+      <li><strong>CO₂ is measured through the skin</strong> (TcCO₂), because ETCO₂ is not reliable during jet ventilation.</li>
     </ul>
     <div class="fig-pair">
       <figure class="photo">
@@ -488,20 +489,20 @@
   <div class="card">
     <h2 class="card-title"><span class="icon icon-orange">🧭</span> A jet case at a glance</h2>
     <ol class="timeline">
-      <li><div class="tl-phase">6:30 AM</div><div class="tl-what">Text the IR anesthesia tech · confirm orientation · 2 PIVs</div></li>
+      <li><div class="tl-phase">6:30 AM</div><div class="tl-what">Text the IR anesthesia tech · confirm orientation · 2 PIVs (second in the forearm for contrast, if needed)</div></li>
       <li><div class="tl-phase">Prep</div><div class="tl-what">8.0 ETT + swivel adapter assembly (then set the adapter aside)</div></li>
       <li><div class="tl-phase">Induce</div><div class="tl-what">Intubate · TIVA</div></li>
-      <li><div class="tl-phase">On the table</div><div class="tl-what">Attach TcCO₂ probe right away (2–10 min to calibrate) · note TcCO₂–ETCO₂ gap</div></li>
+      <li><div class="tl-phase">On the table</div><div class="tl-what">Attach TcCO₂ probe immediately (2–10 min to calibrate) · note TcCO₂–ETCO₂ gap</div></li>
       <li><div class="tl-phase">Connect</div><div class="tl-what">Swivel adapter on · anesthesia machine to Manual, APL open, O₂ 1 LPM, vaporizer off</div></li>
-      <li><div class="tl-phase">Start jet</div><div class="tl-what">Head to scanner: after the gantry is in · Feet to scanner: right away</div></li>
+      <li><div class="tl-phase">Start jet</div><div class="tl-what">Head to scanner: after the gantry is in · Feet to scanner: immediately after intubation</div></li>
       <li><div class="tl-phase">Stabilize</div><div class="tl-what">Adjust DP until TcCO₂ is stable</div></li>
-      <li class="lock"><div class="tl-phase">🔒 Initial scan</div><div class="tl-what"><strong>Settings locked from here.</strong> Changes only after Faculty discussion.</div></li>
+      <li class="lock"><div class="tl-phase">📷 Initial scan</div><div class="tl-what"><strong>Settings finalized from here.</strong> Changes only after Faculty discussion.</div></li>
       <li><div class="tl-phase">Ablation</div><div class="tl-what">Every 15 min: document TcCO₂, check TOF</div></li>
       <li><div class="tl-phase">End</div><div class="tl-what">Conventional vent · normalize ETCO₂ · 1–2 recruitment maneuvers · dock sensor · call tech</div></li>
     </ol>
     <div class="row" style="margin-top:14px;">
       <button class="btn" data-go="setup">Start the setup checklist →</button>
-      <button class="btn btn-ghost" data-go="simulator">Try the simulator</button>
+      <button class="btn btn-ghost" data-go="simulator">Open the simulator</button>
     </div>
   </div>
 
@@ -510,7 +511,7 @@
     <p style="font-size:14px;color:var(--muted);margin-bottom:12px;">Tap a layout for details.</p>
     <div class="orient-grid">
       <button class="orient-card" data-orient="head" aria-pressed="false">
-        <img class="orient-img" src="assets/room-head-to-scanner.jpg" alt="Top-down CT room, head to scanner: the jet ventilator cart is behind the gantry and the TcCO2 monitor is at the patient's feet." width="590" height="500">
+        <img class="orient-img" src="assets/room-head-to-scanner.jpg" alt="Top-down CT room, head to scanner: the jet ventilator is behind the gantry and the TcCO2 monitor is at the patient's feet." width="590" height="500">
         <div class="orient-title">Head to Scanner</div>
         <div class="orient-sub">Liver / lung ablation</div>
       </button>
@@ -552,7 +553,7 @@
 <!-- ===== SETUP ===== -->
 <section id="setup" class="section main" role="tabpanel">
   <h1 class="section-title">Setup Checklist</h1>
-  <p class="section-sub">One phase at a time. Your ticks are saved on this device.</p>
+  <p class="section-sub">Complete one phase at a time. Progress is saved on this device.</p>
 
   <div class="progress-wrap">
     <div class="progress-label"><span>SETUP PROGRESS</span><span id="progress-text">0 / 0</span></div>
@@ -565,20 +566,20 @@
   <div id="setup-complete" class="card complete-banner" hidden>
     <div style="font-size:44px;margin-bottom:8px;">✅</div>
     <h2 class="section-title" style="font-size:22px;">Setup complete</h2>
-    <p style="color:var(--muted);margin-bottom:16px;">Every item is confirmed. Practice the case in the simulator next.</p>
+    <p style="color:var(--muted);margin-bottom:16px;">All items are confirmed. Next, practice the case in the simulator.</p>
     <button class="btn" data-go="simulator">Go to the simulator →</button>
   </div>
 
   <div class="row no-print" style="justify-content:space-between;margin-top:8px;">
     <button class="link-btn" id="toggle-all">Show all phases</button>
-    <button class="link-btn" id="clear-checks">Clear all ticks</button>
+    <button class="link-btn" id="clear-checks">Clear checklist</button>
   </div>
 </section>
 
 <!-- ===== SIMULATOR ===== -->
 <section id="simulator" class="section main" role="tabpanel">
   <h1 class="section-title">Simulator</h1>
-  <p class="section-sub">Start the jet, stabilize TcCO₂, take the initial scan, then handle what the case throws at you. 1 second here = 30 seconds in the case.</p>
+  <p class="section-sub">Start the jet, stabilize TcCO₂, take the initial scan, then manage the events that follow. 1 second in the simulator = 30 seconds of case time.</p>
 
   <div class="two-col">
     <div>
@@ -590,7 +591,7 @@
           <div class="motion-meter"><span>Target movement</span><span class="motion-bars" id="motion-bars"><span></span><span></span><span></span></span><span id="motion-text">Minimal</span></div>
           <div id="freq-warn" class="hint warn" hidden style="margin:0 0 12px;">
             <span class="hint-icon">⚠️</span>
-            <span>Don't change the frequency. 150 cpm is the US FDA limit, and a lower rate means bigger breaths and <strong>more target movement</strong>. Use DP instead.</span>
+            <span>The frequency should not be changed. 150 cpm is the US FDA limit, and a lower rate produces larger breaths and <strong>more target movement</strong>. Adjust DP instead.</span>
           </div>
           <div class="machine-btn-row">
             <button class="machine-btn btn-start" id="btn-start">▶ START JET</button>
@@ -638,15 +639,15 @@
 
       <div class="card">
         <h2 class="card-title"><span class="icon icon-red">🎲</span> Practice an event</h2>
-        <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">Starts the jet if needed. Try it both before and after the initial scan.</p>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">Starts the jet if needed. Practice each event before and after the initial scan.</p>
         <div class="event-grid" id="events"></div>
       </div>
     </div>
   </div>
 
   <dialog id="lock-dialog">
-    <h3>🔒 Settings are locked</h3>
-    <p>The initial scan is done. Changing DP, IT or F now needs a discussion with the <strong>Anesthesia and IR Faculty</strong> first. (Raising FiO₂ is always OK.)</p>
+    <h3>📌 Settings are finalized</h3>
+    <p>The initial scan is complete. Changing DP, IT or F now requires a discussion with the <strong>Anesthesia and IR Faculty</strong> first. (FiO₂ adjustments are acceptable at any time.)</p>
     <div class="row" style="justify-content:flex-end;">
       <button class="btn btn-ghost" value="cancel" id="lock-cancel">Cancel</button>
       <button class="btn" value="ok" id="lock-ok">Discussed — make the change</button>
@@ -680,7 +681,7 @@
     <button class="btn btn-ghost no-print" id="btn-print">🖨 Print</button>
   </div>
 
-  <div class="golden golden-rule"></div>
+  <div class="critical critical-rule"></div>
 
   <div class="card">
     <h2 class="card-title"><span class="icon icon-blue">⚙️</span> Initial ventilator settings</h2>
@@ -725,7 +726,7 @@
       </figure>
       <div class="mgmt" style="background:var(--warn-bg);border-color:#d97706;">
         <strong>Low SpO₂</strong><br>
-        1. ↑ FiO₂ (OK at any time)<br>
+        1. ↑ FiO₂ (acceptable at any time)<br>
         2. Check breath sounds · suction the ETT<br>
         3. Then, <em>after Faculty discussion if post-scan:</em> ↑ IT 5% · ↑ vent flow 0.5–1 LPM (creates PEEP) · ↑ DP 2 psi
       </div>
@@ -804,7 +805,7 @@
 
 // Jet settings: used by the setup checklist, the simulator and the reference table.
 var SETTINGS = [
-  { key: 'freq', name: 'Frequency (F)',          short: 'FREQ',  def: 150, unit: 'cpm', min: 100, max: 150, step: 10, locks: true,  note: 'Do NOT adjust. 150 cpm is the US FDA limit' },
+  { key: 'freq', name: 'Frequency (F)',          short: 'FREQ',  def: 150, unit: 'cpm', min: 100, max: 150, step: 10, locks: true,  note: 'Not adjusted routinely · 150 cpm is the US FDA limit' },
   { key: 'dp',   name: 'Driving Pressure (DP)',  short: 'DP',    def: 18,  unit: 'psi', min: 10,  max: 30,  step: 1,  locks: true,  note: '10–30 psi · ↑ for high BMI · main CO₂ knob' },
   { key: 'it',   name: 'Inspiratory Time (IT)',  short: 'IT',    def: 35,  unit: '%',   min: 30,  max: 45,  step: 5,  locks: true,  note: '30–45%' },
   { key: 'fio2', name: 'FiO₂',                   short: 'FiO₂',  def: 50,  unit: '%',   min: 21,  max: 100, step: 5,  locks: false, note: 'Titrate to SpO₂' }
@@ -833,6 +834,7 @@ var GLOSSARY = [
   ['BIS', 'Bispectral index: processed EEG to monitor depth of anesthesia (useful with TIVA).'],
   ['ETT', 'Endotracheal tube. Use an 8.0 or larger for the jet.'],
   ['PIV', 'Peripheral IV.'],
+  ['ABG', 'Arterial blood gas.'],
   ['PEEP', 'Positive end-expiratory pressure.'],
   ['Murphy eye', 'The side hole near the tip of the ETT.'],
   ['gantry', 'The ring ("donut") of the CT scanner.'],
@@ -846,7 +848,8 @@ var SETUP = [
   { title: 'Pre-room', icon: '📞', items: [
     { id: 'pre-text', t: 'Text the IR Anesthesia Tech (Amy / Jerry) to set up the Monsoon Jet and TcCO₂ monitor', s: 'Send at 6:30 AM' },
     { id: 'pre-orient', t: 'Confirm patient orientation with IR (head or feet to scanner)', s: 'Decides where the jet and the TcCO₂ monitor go (see Overview)' },
-    { id: 'pre-piv', t: 'Verify 2 PIVs: one for anesthesia, one for IR contrast', s: '20g or larger, above the wrist preferred' }
+    { id: 'pre-piv', t: 'Verify 2 PIVs: one for anesthesia, and a second in the forearm for IR pressure (power) contrast injection', s: 'Confirm with IR whether the contrast IV is needed for this procedure · 20g or larger' },
+    { id: 'pre-screen', t: 'Head to scanner: move the jet display onto an IV pole beside the gantry', s: 'Take the display off its stand and use the long cable, so the screen is visible from the anesthesia machine' }
   ]},
   { title: 'ETT & adapter', icon: '🛠️', figure: 'ett', items: [
     { id: 'ett-size', t: 'Select an 8.0 ETT (minimum)', s: 'A larger tube is needed for adequate jet delivery' },
@@ -856,12 +859,12 @@ var SETUP = [
   ]},
   { title: 'TcCO₂ monitor', icon: '📡', items: [
     { id: 'tc-place', t: 'Place the Sentec monitor where it can be seen from the control room', s: 'Head to scanner: at the feet · Feet to scanner: at the head' },
-    { id: 'tc-attach', t: 'Attach the probe right after moving the patient to the procedure table', s: 'Remove both adhesive covers and add 1–2 drops of contact gel. Calibration takes 2–10 min.' },
+    { id: 'tc-attach', t: 'Attach the probe immediately after moving the patient to the procedure table', s: 'Remove both adhesive covers and add 1–2 drops of contact gel. Calibration takes 2–10 min.' },
     { id: 'tc-site', t: 'Probe site: earlobe, forehead or clavicle (upper chest)', s: 'Whichever is most convenient for the patient and the procedure' },
     { id: 'tc-gap', t: 'Note the baseline TcCO₂–ETCO₂ difference before starting the jet' }
   ]},
   { title: 'Jet settings', icon: '⚙️', items: [
-    { id: 'jet-f', t: 'F (Frequency): ' + setting('freq').def + ' cpm', s: 'Do not adjust after setting' },
+    { id: 'jet-f', t: 'F (Frequency): ' + setting('freq').def + ' cpm', s: 'Not adjusted after setting' },
     { id: 'jet-dp', t: 'DP (Driving Pressure): ' + setting('dp').def + ' psi (range 10–30, ↑ for high BMI)', s: 'The main knob for CO₂' },
     { id: 'jet-it', t: 'IT (Inspiratory Time): ' + setting('it').def + '% (range 30–45%)' },
     { id: 'jet-other', t: 'FiO₂ ' + setting('fio2').def + '% · Climatization 3 or 4 · PP alarm 24 · PIP alarm 28' }
@@ -869,15 +872,15 @@ var SETUP = [
   { title: 'Start the jet', icon: '▶️', items: [
     { id: 'go-adapter', t: 'After intubation, attach the swivel adapter to the ETT' },
     { id: 'go-machine', t: 'Anesthesia machine: Manual mode, APL fully open, O₂ flow 1 LPM, vaporizer off', s: 'An open APL prevents back-pressure, a common cause of PP/PIP alarms' },
-    { id: 'go-timing', t: 'Start the jet at the right time', s: 'Head to scanner: after the gantry is brought in · Feet to scanner: right after intubation' },
-    { id: 'go-stable', t: 'Stabilize TcCO₂ (adjust DP) before the initial scan', s: 'After the initial scan, settings are locked unless Faculty agree' },
+    { id: 'go-timing', t: 'Start the jet at the right time', s: 'Head to scanner: after the gantry is brought in · Feet to scanner: immediately after intubation' },
+    { id: 'go-stable', t: 'Stabilize TcCO₂ (adjust DP) before the initial scan', s: 'Stable = the reading changes by 0.1 mmHg no more often than every 30 seconds. After the initial scan, settings are finalized.' },
     { id: 'go-doc', t: 'Document: check "Jet Ventilator" under Checklist → Ancillary Equipment' }
   ]}
 ];
 
 var ORIENT = {
-  head: '🔵 <strong>Head to scanner</strong> (liver / lung ablation)<br>• Jet ventilator <strong>behind</strong> the gantry<br>• TcCO₂ monitor at the <strong>feet</strong><br>• Start the jet only <strong>after the gantry is brought in</strong>',
-  feet: '🟠 <strong>Feet to scanner</strong> (renal / some livers)<br>• Jet ventilator <strong>in front</strong> of the gantry, on the side opposite the IR physician<br>• TcCO₂ monitor at the <strong>head</strong><br>• Start the jet <strong>right after intubation</strong>'
+  head: '🔵 <strong>Head to scanner</strong> (liver / lung ablation)<br>• Jet ventilator <strong>behind</strong> the gantry<br>• Jet display moved off its stand onto an <strong>IV pole beside the gantry</strong> (long cable), visible from the anesthesia machine<br>• TcCO₂ monitor at the <strong>feet</strong><br>• Start the jet only <strong>after the gantry is brought in</strong>',
+  feet: '🟠 <strong>Feet to scanner</strong> (renal / some livers)<br>• Jet ventilator <strong>in front</strong> of the gantry, on the side opposite the IR physician<br>• TcCO₂ monitor at the <strong>head</strong><br>• Start the jet <strong>immediately after intubation</strong>'
 };
 
 /* ================= STORAGE (per device, optional) ================= */
@@ -916,14 +919,19 @@ document.addEventListener('click', function (e) {
   if (b) go(b.dataset.go);
 });
 
-/* ================= GOLDEN RULE ================= */
-document.querySelectorAll('.golden-rule').forEach(function (el) {
+/* ================= CRITICAL POINTS ================= */
+document.querySelectorAll('.critical-rule').forEach(function (el) {
   el.innerHTML =
-    '<div class="golden-icon">🔒</div><div>' +
-    '<div class="golden-title">The golden rule</div>' +
-    '<ol><li><strong>Before the initial scan:</strong> adjust DP until TcCO₂ is stable.</li>' +
-    '<li><strong>After the initial scan:</strong> settings are locked. Change DP, IT or F only after discussing with the Anesthesia and IR Faculty.</li></ol>' +
-    '<div class="golden-foot">Raising FiO₂ for low SpO₂ is OK at any time. Never change F from 150.</div></div>';
+    '<div class="critical-icon">📌</div><div>' +
+    '<div class="critical-title">Critical points</div>' +
+    '<ol><li><strong>Before the initial scan:</strong> adjust DP until TcCO₂ is stable (the reading changes by 0.1 mmHg no more often than every 30 seconds).</li>' +
+    '<li><strong>After the initial scan:</strong> settings are finalized. Change DP, IT or F only after discussing with the Anesthesia and IR Faculty.</li>' +
+    '<li><strong>FiO₂</strong> adjustments are acceptable at any time.</li>' +
+    '<li><strong>If there are significant concerns about TcCO₂</strong>, consider:<ul>' +
+      '<li>Obtaining an ABG (arterial stick if there is no arterial line)</li>' +
+      '<li>Asking the IR Faculty to inform you when probe placement is complete. Conventional ventilation can resume at that point, even before the ablation.</li>' +
+      '<li>In an emergency, the patient can be returned to conventional ventilation at any time, even while still connected to the jet ventilator.</li>' +
+    '</ul></li></ol></div>';
 });
 
 /* ================= OVERVIEW ================= */
@@ -1065,7 +1073,7 @@ $('setup').addEventListener('click', function (e) {
 });
 $('toggle-all').addEventListener('click', function () { showAll = !showAll; renderSetup(); });
 $('clear-checks').addEventListener('click', function () {
-  if (!confirm('Clear all checklist ticks?')) return;
+  if (!confirm('Clear all checklist progress?')) return;
   checked = {}; save('checks', checked); phaseIdx = 0; renderSetup();
 });
 
@@ -1101,7 +1109,7 @@ function renderKnobs() {
   $('knobs').innerHTML = SETTINGS.map(function (s) {
     var locked = S.scanned && s.locks;
     return '<div class="knob-group' + (locked ? ' locked' : '') + '">' +
-      '<div class="knob-label">' + (locked ? '🔒 ' : '') + s.short + ' (' + s.unit.toUpperCase() + ')</div>' +
+      '<div class="knob-label">' + (locked ? '📌 ' : '') + s.short + ' (' + s.unit.toUpperCase() + ')</div>' +
       '<div class="knob-controls">' +
         '<button class="knob-btn" data-knob="' + s.key + '" data-dir="-1" aria-label="Decrease ' + s.name + '">−</button>' +
         '<div class="knob-val" id="knob-' + s.key + '" aria-live="polite">' + S.settings[s.key] + '</div>' +
@@ -1120,7 +1128,7 @@ $('knobs').addEventListener('click', function (e) {
     pendingChange = { key: s.key, val: val };
     var dlg = $('lock-dialog');
     if (dlg.showModal) dlg.showModal();
-    else if (confirm('Settings are locked after the initial scan. Have you discussed this with Faculty?')) applyChange(s.key, val, true);
+    else if (confirm('Settings are finalized after the initial scan. Has this been discussed with Faculty?')) applyChange(s.key, val, true);
     return;
   }
   applyChange(s.key, val, false);
@@ -1228,7 +1236,7 @@ function renderSim() {
 
   // Controls
   $('btn-scan').disabled = !S.running || S.scanned;
-  $('btn-scan').textContent = S.scanned ? '🔒 SCAN DONE' : '📷 INITIAL SCAN';
+  $('btn-scan').textContent = S.scanned ? '✓ SCAN DONE' : '📷 INITIAL SCAN';
   $('freq-warn').hidden = v.freq === setting('freq').def;
   var level = v.freq >= 150 ? 1 : v.freq >= 130 ? 2 : 3;
   Array.prototype.forEach.call($('motion-bars').children, function (b, i) { b.classList.toggle('on', i < level); });
@@ -1257,16 +1265,16 @@ function hintFor() {
   if (!S.running) return ['', '▶️', S.t ? 'Jet stopped. Press <strong>Start Jet</strong> to resume or <strong>Reset</strong> for a new case.' : 'Press <strong>Start Jet</strong> to begin.'];
   if (S.alarm !== 'off') return ['danger', '🚨', 'PP/PIP alarm. Use the <strong>bedside checks</strong>: tubing → suction ETT → TOF → APL valve. Then <strong>Silence</strong>, then <strong>Alarm Reset</strong>.'];
   if (S.calib > 0) return ['', '⏳', 'TcCO₂ is settling…'];
-  if (S.spo2 < 92) return ['danger', '🫁', 'SpO₂ low. <strong>↑ FiO₂ first</strong> (OK any time). Then check breath sounds and suction. Next: ↑ IT 5% or ↑ DP.' + post];
-  if (S.tcco2 > 60) return ['danger', '📈', 'TcCO₂ high. <strong>↑ DP by 1–2 psi</strong> and give it a minute.' + post];
+  if (S.spo2 < 92) return ['danger', '🫁', 'SpO₂ low. <strong>↑ FiO₂ first</strong> (acceptable at any time). Then check breath sounds and suction. Next: ↑ IT 5% or ↑ DP.' + post];
+  if (S.tcco2 > 60) return ['danger', '📈', 'TcCO₂ high. <strong>↑ DP by 1–2 psi</strong> and allow time for TcCO₂ to respond.' + post + (S.scanned ? ' If concerns persist, consider an ABG.' : '')];
   if (S.tcco2 < 25) return ['warn', '📉', 'TcCO₂ low. <strong>↓ DP by 1–2 psi</strong>.' + post];
-  if (S.settings.freq !== 150) return ['warn', '⚠️', 'Put the frequency back to 150 cpm and use DP for CO₂.'];
+  if (S.settings.freq !== 150) return ['warn', '⚠️', 'Return the frequency to 150 cpm and use DP for CO₂ management.'];
   if (!S.scanned) {
     if (tcco2Stable()) return ['good', '✅', 'TcCO₂ is stable and in range. Ready for the <strong>initial scan</strong>.'];
-    return ['', '🎯', 'Stabilize TcCO₂ with DP before the initial scan. Watch the trend flatten.'];
+    return ['', '🎯', 'Stabilize TcCO₂ with DP before the initial scan. Wait for the trend to level off.'];
   }
-  if (S.tcco2 > 55) return ['warn', '👀', 'TcCO₂ is creeping up. Up to 60 is permissive; if it keeps rising, talk to Faculty about ↑ DP.'];
-  return ['good', '🔒', 'Settings locked. Monitor TcCO₂ and TOF every 15 minutes.'];
+  if (S.tcco2 > 55) return ['warn', '👀', 'TcCO₂ is trending upward. Up to 60 mmHg is permissive; if it continues to rise, discuss ↑ DP with Faculty.'];
+  return ['good', '📌', 'Settings finalized. Monitor TcCO₂ and TOF every 15 minutes.'];
 }
 
 function renderTrend() {
@@ -1284,7 +1292,7 @@ function renderTrend() {
          '<text x="' + R + '" y="134" font-size="10" fill="#374151" text-anchor="end">' + fmtTime(tEnd) + '</text>';
   if (S.scanned && S.scanT >= tStart) {
     out += '<line x1="' + x(S.scanT) + '" x2="' + x(S.scanT) + '" y1="' + T + '" y2="' + B + '" stroke="#ea580c" stroke-dasharray="3 3"/>' +
-      '<text x="' + (x(S.scanT) + 4) + '" y="' + (T + 10) + '" font-size="10" fill="#9a3412">🔒 scan</text>';
+      '<text x="' + (x(S.scanT) + 4) + '" y="' + (T + 10) + '" font-size="10" fill="#9a3412">initial scan</text>';
   }
   if (S.history.length > 1) {
     out += '<path d="' + S.history.map(function (p, i) { return (i ? 'L' : 'M') + x(p.t).toFixed(1) + ',' + y(p.v).toFixed(1); }).join('') +
@@ -1322,9 +1330,9 @@ $('btn-start').addEventListener('click', startJet);
 $('btn-stop').addEventListener('click', stopJet);
 $('btn-reset').addEventListener('click', resetSim);
 $('btn-scan').addEventListener('click', function () {
-  if (!tcco2Stable() && !confirm('TcCO₂ isn\'t stable yet. Take the initial scan anyway?')) return;
+  if (!tcco2Stable() && !confirm('TcCO₂ is not yet stable. Proceed with the initial scan?')) return;
   S.scanned = true; S.scanT = S.t;
-  log('📷 Initial scan acquired. DP, IT and F are now locked.');
+  log('📷 Initial scan acquired. DP, IT and F are now finalized.');
   renderKnobs(); renderSim();
 });
 $('btn-silence').addEventListener('click', function () {
@@ -1414,7 +1422,7 @@ function startEvent(key) {
 var scenarios = {
   co2high: {
     title: 'Rising TcCO₂ After Initial Scan', tag: 'CO₂ MANAGEMENT', tagClass: 'tag-caution', icon: 'co2', sim: 'highco2',
-    desc: 'TcCO₂ climbs from 42 to 58 mmHg. The initial scan is complete. Who do you call first?',
+    desc: 'TcCO₂ climbs from 42 to 58 mmHg. The initial scan is complete. What is the first step?',
     questions: [
       {
         note: 'Settings should NOT be changed after the initial scan without Faculty discussion.',
@@ -1422,7 +1430,7 @@ var scenarios = {
         options: ['Increase Driving Pressure by 1–2 psi immediately', 'Decrease Frequency from 150 to 140 cpm', 'Contact Anesthesia Faculty and discuss with IR Faculty before making any changes', 'Switch back to conventional ventilation immediately'],
         correct: 2,
         takeaway: 'After the initial scan, talk to the Anesthesia and IR Faculty before changing any setting.',
-        feedback: 'Because the initial scan has already been completed, NO settings should be changed without first discussing with the Anesthesia Faculty and IR Faculty. The team will assess whether permissive hypercapnia (TcCO₂ up to 60 mmHg) is acceptable to continue the case, or whether a change is warranted. Independent adjustments after the initial scan are not appropriate.'
+        feedback: 'Because the initial scan has already been completed, settings should not be changed without first discussing with the Anesthesia Faculty and IR Faculty. The team will assess whether permissive hypercapnia (TcCO₂ up to 60 mmHg) is acceptable to continue the case, or whether a change is warranted. Independent adjustments after the initial scan are not appropriate.'
       },
       {
         q: 'After Faculty discussion, the team agrees TcCO₂ of 58 mmHg is acceptable and the procedure continues. What range is considered "permissive" during HFJV?',
@@ -1442,7 +1450,7 @@ var scenarios = {
         options: ['Immediately switch to conventional ventilation', 'Inspect jet tubing for kinks or obstruction', 'Increase driving pressure to push through the obstruction', 'Call the Monsoon rep immediately'],
         correct: 1,
         takeaway: 'Start with the physical check: tubing kinks and connections.',
-        feedback: 'PP/PIP high differential: kinked/obstructed jet tubing, ETT/airway obstruction (mucus), inadequate paralysis, inappropriate jet settings, or a closed APL valve. Always start with the physical check of tubing and connections. It is the most common and most fixable cause.'
+        feedback: 'PP/PIP high differential: kinked/obstructed jet tubing, ETT/airway obstruction (mucus), inadequate paralysis, inappropriate jet settings, or a closed APL valve. Start with the physical check of tubing and connections. It is the most common and most fixable cause.'
       },
       {
         q: 'Tubing is patent. You check the ETT and it seems fine. What do you assess next?',
@@ -1468,7 +1476,7 @@ var scenarios = {
         q: 'SpO₂ drops to 88% on FiO₂ 50%. The chest is moving and the jet appears to be running normally. First intervention?',
         options: ['Increase FiO₂', 'Immediately switch to conventional ventilation', 'Decrease driving pressure', 'Increase frequency to 160'],
         correct: 0,
-        takeaway: 'Raise FiO₂ first. It doesn\'t change the jet mechanics or disturb the ablation.',
+        takeaway: 'Raise FiO₂ first. It does not change the jet mechanics or disturb the ablation.',
         feedback: 'Increasing FiO₂ is the safest immediate step because it does not change the ventilator mechanics or disrupt the ablation. Switching to conventional ventilation or performing a recruitment maneuver would interrupt the procedure, and those decisions require Faculty discussion. Decreasing DP would worsen ventilation and is not appropriate for hypoxia.'
       },
       {
@@ -1489,7 +1497,7 @@ var scenarios = {
         q: 'The patient is intubated on TIVA. The TcCO₂ probe is attached and reading 44 mmHg (stable). The patient is HEAD to scanner. When can you initiate the jet?',
         options: ['Immediately, since TcCO₂ is stable', 'After the gantry (donut) is brought in to the patient', 'Only after the IR physician is in the room', 'After 10 minutes of TcCO₂ monitoring'],
         correct: 1,
-        takeaway: 'Head to scanner: wait for the gantry. Feet to scanner: start right away.',
+        takeaway: 'Head to scanner: wait for the gantry. Feet to scanner: start immediately after intubation.',
         feedback: 'For head-to-scanner orientation, you must wait until the gantry is brought in. The jet ventilator is positioned behind the gantry, and you need to be able to connect and adjust settings with the machine in its final position. For feet-to-scanner, you can initiate the jet immediately.'
       },
       {
@@ -1501,9 +1509,9 @@ var scenarios = {
       },
       {
         q: 'After connecting to the jet, you need to finalize settings. What is the key goal before the INITIAL scan?',
-        options: ['Achieve TcCO₂ of exactly 40 mmHg', 'Stabilize TcCO₂ so it is no longer fluctuating', 'Confirm SpO₂ is 100%', 'Set frequency to 200 cpm for maximum motion reduction'],
+        options: ['Achieve TcCO₂ of exactly 40 mmHg', 'Stabilize TcCO₂ (the reading changes by 0.1 mmHg no more often than every 30 seconds)', 'Confirm SpO₂ is 100%', 'Set frequency to 200 cpm for maximum motion reduction'],
         correct: 1,
-        takeaway: 'Before the initial scan, the goal is a stable TcCO₂, not a specific number.',
+        takeaway: 'Before the initial scan, the goal is a stable TcCO₂ (changing by 0.1 mmHg no more often than every 30 seconds), not a specific number.',
         feedback: 'The protocol emphasizes stabilizing TcCO₂ BEFORE the initial scan. Once the scan is acquired, you do not change settings without discussing with the anesthesiologist and IR physician. Stability is the goal, not a specific absolute value, because permissive hypercapnia is acceptable.'
       }
     ]
@@ -1619,7 +1627,7 @@ function answer(orig) {
   });
   var fb = $('feedback');
   fb.className = 'feedback-box ' + (right ? 'correct-fb' : 'wrong-fb');
-  fb.innerHTML = '<strong>' + (right ? '✓ Correct. ' : '✗ Not quite. ') + esc(q.takeaway) + '</strong>' +
+  fb.innerHTML = '<strong>' + (right ? '✓ Correct. ' : '✗ Incorrect. ') + esc(q.takeaway) + '</strong>' +
     '<details><summary>Why?</summary><p>' + esc(q.feedback) + '</p></details>';
   glossify(fb);
   $('next-btn').hidden = false;
@@ -1639,7 +1647,7 @@ function showResults() {
       '<div class="score-num">' + sc + '/' + total + '</div>' +
       '<div class="score-label">' + (pct === 1 ? '🏆 Excellent' : pct >= 0.67 ? '✅ Good' : '📚 Review the protocol') + '</div>' +
       '<p style="color:var(--muted);margin-top:12px;font-size:14px;">' +
-        (pct === 1 ? 'Perfect score. You know this protocol.' : pct >= 0.67 ? 'Good work. Review any missed questions.' : 'Review the Quick Reference before your next case.') + '</p>' +
+        (pct === 1 ? 'All answers correct.' : pct >= 0.67 ? 'Review any missed questions.' : 'Review the Quick Reference before your next case.') + '</p>' +
       '<div class="row" style="margin-top:22px;justify-content:center;">' +
         '<button class="btn" data-retry="' + current.key + '">Retry this scenario</button>' +
         (s.sim ? '<button class="btn btn-ghost" data-sim="' + s.sim + '">Practice it in the simulator →</button>' : '') +
@@ -1673,8 +1681,8 @@ var SKIP = 'button, svg, abbr, script, style, th, .knob-label, .no-gloss, .card-
 
 function glossify(root) {
   if (!root) return;
-  var scopes = root.matches && root.matches('.card, .golden, .feedback-box, .orient-note') ? [root] : [];
-  scopes = scopes.concat([].slice.call(root.querySelectorAll('.card, .golden, .feedback-box, .orient-note')));
+  var scopes = root.matches && root.matches('.card, .critical, .feedback-box, .orient-note') ? [root] : [];
+  scopes = scopes.concat([].slice.call(root.querySelectorAll('.card, .critical, .feedback-box, .orient-note')));
   scopes.forEach(function (scope) {
     if (scope.dataset.glossed) return;
     scope.dataset.glossed = '1';
