@@ -492,9 +492,9 @@
       <li><div class="tl-phase">6:30 AM</div><div class="tl-what">Text the IR anesthesia tech · confirm orientation<br><strong>2 PIVs:</strong> one for anesthesia, plus a <strong>second in the forearm</strong> for pressure contrast injection (confirm with IR whether it is needed)</div></li>
       <li><div class="tl-phase">Prep</div><div class="tl-what">8.0 ETT + swivel adapter assembly (then set the adapter aside)</div></li>
       <li><div class="tl-phase">Induce</div><div class="tl-what">Intubate · TIVA</div></li>
-      <li><div class="tl-phase">On the table</div><div class="tl-what">Attach TcCO₂ probe immediately (2–10 min to calibrate) · note TcCO₂–ETCO₂ gap</div></li>
-      <li><div class="tl-phase">Connect</div><div class="tl-what">Swivel adapter on · anesthesia machine to Manual, APL open, O₂ 1 LPM, vaporizer off</div></li>
-      <li><div class="tl-phase">Start jet</div><div class="tl-what">Head to scanner: after the gantry is in · Feet to scanner: immediately after intubation</div></li>
+      <li><div class="tl-phase">On the table</div><div class="tl-what">Attach TcCO₂ probe immediately (2–10 min to stabilize) · note TcCO₂–ETCO₂ gap</div></li>
+      <li><div class="tl-phase">When ready to jet</div><div class="tl-what"><em>Head to scanner: after the gantry is in · Feet to scanner: may proceed after induction</em><br>Connect swivel adapter · set to manual ventilation, APL open, O₂ 1 LPM, vaporizer off</div></li>
+      <li><div class="tl-phase">Start jet</div><div class="tl-what">See initial settings in the <a href="#setup" data-setup-phase="3">Setup section</a></div></li>
       <li><div class="tl-phase">Stabilize</div><div class="tl-what">Adjust DP until TcCO₂ is stable</div></li>
       <li class="lock"><div class="tl-phase">📷 Initial scan</div><div class="tl-what"><strong>Settings finalized from here.</strong> Changes only after Faculty discussion.</div></li>
       <li><div class="tl-phase">Ablation</div><div class="tl-what">Every 15 min: document TcCO₂, check TOF</div></li>
@@ -860,7 +860,7 @@ var SETUP = [
   ]},
   { title: 'TcCO₂ monitor', icon: '📡', items: [
     { id: 'tc-place', t: 'Place the Sentec monitor where it can be seen from the control room', s: 'Head to scanner: at the feet · Feet to scanner: at the head' },
-    { id: 'tc-attach', t: 'Attach the probe immediately after moving the patient to the procedure table', s: 'Remove both adhesive covers and add 1–2 drops of contact gel. Calibration takes 2–10 min.' },
+    { id: 'tc-attach', t: 'Attach the probe immediately after moving the patient to the procedure table', s: 'Remove both adhesive covers and add 1–2 drops of contact gel. The reading takes 2–10 min to stabilize.' },
     { id: 'tc-site', t: 'Probe site: earlobe, forehead or clavicle (upper chest)', s: 'Whichever is most convenient for the patient and the procedure' },
     { id: 'tc-gap', t: 'Note the baseline TcCO₂–ETCO₂ difference before starting the jet' }
   ]},
@@ -873,7 +873,7 @@ var SETUP = [
   { title: 'Start the jet', icon: '▶️', items: [
     { id: 'go-adapter', t: 'After intubation, attach the swivel adapter to the ETT' },
     { id: 'go-machine', t: 'Anesthesia machine: Manual mode, APL fully open, O₂ flow 1 LPM, vaporizer off', s: 'An open APL prevents back-pressure, a common cause of PP/PIP alarms' },
-    { id: 'go-timing', t: 'Start the jet at the right time', s: 'Head to scanner: after the gantry is brought in · Feet to scanner: immediately after intubation' },
+    { id: 'go-timing', t: 'Start the jet at the right time', s: 'Head to scanner: after the gantry is brought in · Feet to scanner: may proceed after intubation' },
     { id: 'go-stable', t: 'Stabilize TcCO₂ (adjust DP) before the initial scan', s: 'Stable = the reading changes by 0.1 mmHg no more often than every 30 seconds. After the initial scan, settings are finalized.' },
     { id: 'go-doc', t: 'Document: check "Jet Ventilator" under Checklist → Ancillary Equipment' }
   ]}
@@ -881,7 +881,7 @@ var SETUP = [
 
 var ORIENT = {
   head: '🔵 <strong>Head to scanner</strong> (liver / lung ablation)<br>• Jet ventilator <strong>behind</strong> the gantry<br>• Jet display moved off its stand onto an <strong>IV pole beside the gantry</strong> (long cable), visible from the anesthesia machine<br>• TcCO₂ monitor at the <strong>feet</strong><br>• Start the jet only <strong>after the gantry is brought in</strong>',
-  feet: '🟠 <strong>Feet to scanner</strong> (renal / some livers)<br>• Jet ventilator <strong>in front</strong> of the gantry, on the side opposite the IR physician<br>• TcCO₂ monitor at the <strong>head</strong><br>• Start the jet <strong>immediately after intubation</strong>'
+  feet: '🟠 <strong>Feet to scanner</strong> (renal / some livers)<br>• Jet ventilator <strong>in front</strong> of the gantry, on the side opposite the IR physician<br>• TcCO₂ monitor at the <strong>head</strong><br>• Jet ventilation <strong>may proceed after intubation</strong>'
 };
 
 /* ================= STORAGE (per device, optional) ================= */
@@ -1071,6 +1071,16 @@ $('setup').addEventListener('click', function (e) {
   showAll = false;
   renderSetup();
   $('stepper').scrollIntoView({ block: 'nearest' });
+});
+// Links elsewhere in the app that open a specific setup phase (e.g. the timeline's "Start jet").
+document.addEventListener('click', function (e) {
+  var a = e.target.closest('[data-setup-phase]');
+  if (!a) return;
+  e.preventDefault();
+  phaseIdx = +a.dataset.setupPhase;
+  showAll = false;
+  renderSetup();
+  go('setup');
 });
 $('toggle-all').addEventListener('click', function () { showAll = !showAll; renderSetup(); });
 $('clear-checks').addEventListener('click', function () {
@@ -1492,14 +1502,14 @@ var scenarios = {
   },
   initiate: {
     title: 'When Can You Start the Jet?', tag: 'INITIATION', tagClass: 'tag-routine', icon: 'initiate',
-    desc: 'Patient is induced, intubated, on TIVA. TcCO₂ is calibrating. When do you initiate jet ventilation?',
+    desc: 'Patient is induced, intubated, on TIVA. TcCO₂ is stabilizing. When do you initiate jet ventilation?',
     questions: [
       {
         q: 'The patient is intubated on TIVA. The TcCO₂ probe is attached and reading 44 mmHg (stable). The patient is HEAD to scanner. When can you initiate the jet?',
         options: ['Immediately, since TcCO₂ is stable', 'After the gantry (donut) is brought in to the patient', 'Only after the IR physician is in the room', 'After 10 minutes of TcCO₂ monitoring'],
         correct: 1,
-        takeaway: 'Head to scanner: wait for the gantry. Feet to scanner: start immediately after intubation.',
-        feedback: 'For head-to-scanner orientation, you must wait until the gantry is brought in. The jet ventilator is positioned behind the gantry, and you need to be able to connect and adjust settings with the machine in its final position. For feet-to-scanner, you can initiate the jet immediately.'
+        takeaway: 'Head to scanner: wait for the gantry. Feet to scanner: may proceed after intubation.',
+        feedback: 'For head-to-scanner orientation, you must wait until the gantry is brought in. The jet ventilator is positioned behind the gantry, and you need to be able to connect and adjust settings with the machine in its final position. For feet-to-scanner, jet ventilation may proceed after intubation.'
       },
       {
         q: 'You\'re about to switch from conventional to jet ventilation. What must you do to the anesthesia machine before starting the jet?',
