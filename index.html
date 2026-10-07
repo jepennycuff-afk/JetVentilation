@@ -202,7 +202,9 @@
 
   /* SETUP STEPPER */
   .progress-wrap { margin-bottom: 16px; }
-  .progress-label { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .progress-label { display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 8px; min-height: 34px; }
+  .progress-right { display: flex; align-items: center; gap: 12px; }
+  .progress-right .btn { min-height: 30px; padding: 5px 10px; letter-spacing: 0.5px; }
   .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
   .progress-fill { height: 100%; width: 0; background: linear-gradient(90deg, #1d6fa4, #0ea5e9); transition: width 0.4s ease; }
   .stepper { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
@@ -557,7 +559,7 @@
   <p class="section-sub">Complete one phase at a time. Progress is saved on this device.</p>
 
   <div class="progress-wrap">
-    <div class="progress-label"><span>SETUP PROGRESS</span><span id="progress-text">0 / 0</span></div>
+    <div class="progress-label"><span>SETUP PROGRESS</span><span class="progress-right"><button class="btn btn-ghost btn-sm no-print" id="clear-checks" hidden>↺ Reset checklist</button><span id="progress-text">0 / 0</span></span></div>
     <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
   </div>
 
@@ -573,7 +575,6 @@
 
   <div class="row no-print" style="justify-content:space-between;margin-top:8px;">
     <button class="link-btn" id="toggle-all">Show all phases</button>
-    <button class="link-btn" id="clear-checks">Clear checklist</button>
   </div>
 </section>
 
@@ -1048,6 +1049,7 @@ function updateProgress() {
   $('progress-fill').style.width = Math.round(done / total * 100) + '%';
   $('progress-text').textContent = done + ' / ' + total;
   $('setup-complete').hidden = done !== total;
+  $('clear-checks').hidden = done === 0;
 }
 
 $('setup').addEventListener('change', function (e) {
@@ -1084,7 +1086,7 @@ document.addEventListener('click', function (e) {
 });
 $('toggle-all').addEventListener('click', function () { showAll = !showAll; renderSetup(); });
 $('clear-checks').addEventListener('click', function () {
-  if (!confirm('Clear all checklist progress?')) return;
+  if (!confirm('Reset the checklist? All ticks will be cleared.')) return;
   checked = {}; save('checks', checked); phaseIdx = 0; renderSetup();
 });
 
