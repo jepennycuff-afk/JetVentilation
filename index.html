@@ -238,6 +238,12 @@
   .check-item.done .check-sub { color: #6b7280; }
   .phase-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
   .complete-banner { text-align: center; padding: 18px; }
+  .phase-title { flex-wrap: wrap; }
+  .phase-note {
+    margin-left: auto; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+    color: var(--warn); background: var(--warn-bg); border: 1px solid rgba(217,119,6,0.35);
+    border-radius: 8px; padding: 4px 10px;
+  }
 
   /* SIMULATOR */
   .machine-visual { background: #f0f6ff; border: 1px solid #b8d9f5; border-radius: 14px; padding: 18px; margin-bottom: 20px; }
@@ -865,7 +871,7 @@ var SETUP = [
     { id: 'tc-site', t: 'Probe site: earlobe, forehead or clavicle (upper chest)', s: 'Whichever is most convenient for the patient and the procedure' },
     { id: 'tc-gap', t: 'Note the baseline TcCO₂–ETCO₂ difference before starting the jet' }
   ]},
-  { title: 'Jet settings', icon: '⚙️', items: [
+  { title: 'Jet settings', icon: '⚙️', note: 'Chart final jet settings under Quick Note', items: [
     { id: 'jet-f', t: 'F (Frequency): ' + setting('freq').def + ' cpm', s: 'Not adjusted after setting' },
     { id: 'jet-dp', t: 'DP (Driving Pressure): ' + setting('dp').def + ' psi (range 10–30, ↑ for high BMI)', s: 'The main knob for CO₂' },
     { id: 'jet-it', t: 'IT (Inspiratory Time): ' + setting('it').def + '% (range 30–45%)' },
@@ -1007,7 +1013,8 @@ function phaseCount(p) { return p.items.filter(function (it) { return checked[it
 
 function renderPhase(p, i) {
   var html = '<section class="card" data-phase="' + i + '">' +
-    '<h2 class="card-title"><span class="icon icon-blue">' + p.icon + '</span> ' + (i + 1) + '. ' + esc(p.title) + '</h2>';
+    '<h2 class="card-title phase-title"><span class="icon icon-blue">' + p.icon + '</span> ' + (i + 1) + '. ' + esc(p.title) +
+      (p.note ? '<span class="phase-note">📝 ' + esc(p.note) + '</span>' : '') + '</h2>';
   if (p.figure === 'ett') html += ettFigure();
   html += '<ul class="checklist">' + p.items.map(function (it) {
     var on = !!checked[it.id];
